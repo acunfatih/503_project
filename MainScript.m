@@ -3,19 +3,13 @@ clear all
 close all
 clc
 
+%% Configurations
 
-%% Load Datasets
+% name of the dataset
 dataSet = 'cali';
-switch dataSet
-    case 'bodyfat'
-        load bodyfat_dataset
-        XTrain = bodyfatInputs;
-        YTrain = bodyfatTargets;
-    case 'cali'
-        [XTrain, YTrain, Xval, Yval] = load_dataset(dataSet);
-end
 
-%% One example using Linear regression and MSE
+% preprocess the existing data and save to .mat, takes values 0 or 1
+preprocess = 1; 
 
 % Select model and cost function
 % Current Model Options
@@ -26,6 +20,31 @@ model = 'LinearRegression';
 % 1. MSE (Mean Square Error)
 % 2. MAE (Mean Absolute Error)
 costFunction = 'MAE';
+
+% optimizer can be moved here too but I didn't want to touch to not to 
+% change the code
+
+%% preprocess 
+if preprocess
+    preprocess_save_data(dataSet);
+end 
+%% Load dataset to use
+path = strcat('data/', dataSet, '.mat');
+
+load(path);
+
+% Deprecated
+% switch dataSet
+%     case 'cali'
+%         [XTrain, YTrain, XVal, YVal, XTest, YTest] = load(path);
+%     
+%     case 'bodyfat'
+%         load bodyfat_dataset
+%         XTrain = bodyfatInputs;
+%         YTrain = bodyfatTargets;
+% end
+
+%% One example using Linear regression and MSE
 
 % Define optimizer function that will be used to find optimized theta
 fun = @(theta)optimizedFunction(theta,model,costFunction,XTrain,YTrain);
