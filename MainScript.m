@@ -5,12 +5,14 @@ clc
 
 
 %% Load Datasets
-dataSet = 'bodyfat';
+dataSet = 'cali';
 switch dataSet
     case 'bodyfat'
         load bodyfat_dataset
         XTrain = bodyfatInputs;
         YTrain = bodyfatTargets;
+    case 'cali'
+        [XTrain, YTrain, Xval, Yval] = load_dataset(dataSet);
 end
 
 %% One example using Linear regression and MSE
