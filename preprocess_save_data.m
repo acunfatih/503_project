@@ -26,12 +26,12 @@ function [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_data(data, split_rat
     X = X_table{:,:};
     Y = Y_table{:,:};
 
-    XTrain = X(1:n_train,:); 
-    YTrain = Y(1:n_train,:);
-    XVal = X(start_index_val:start_index_test-1,:);
-    YVal = Y(start_index_val:start_index_test-1,:);
-    XTest = X(start_index_test:end,:);
-    YTest = Y(start_index_test:end,:);
+    XTrain = X(1:n_train,:)'; 
+    YTrain = Y(1:n_train,:)';
+    XVal = X(start_index_val:start_index_test-1,:)';
+    YVal = Y(start_index_val:start_index_test-1,:)';
+    XTest = X(start_index_test:end,:)';
+    YTest = Y(start_index_test:end,:)';
     
 end
 
