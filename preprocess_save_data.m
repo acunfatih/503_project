@@ -53,7 +53,6 @@ function [cali_data,max_label] = get_cali_data()
     
     % Normalize data
     max_label = max(cali_data(:,end));
-    cali_data(:,1) = abs(cali_data(:,1));
     cali_data = norm_zero2one(cali_data);
 
     % Shuffle the data
