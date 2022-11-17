@@ -62,5 +62,7 @@ function [cali_data,max_label] = get_cali_data()
 end
 
 function norm_data = norm_zero2one(data)
-    norm_data  = data./max(data(:,:));
+    minData = min(data);
+    rangeData = range(data);
+    norm_data  = (data - minData)./rangeData;
 end
