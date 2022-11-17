@@ -30,19 +30,9 @@ if preprocess
 end 
 %% Load dataset to use
 path = strcat('data/', dataSet, '.mat');
-
+max_label = strcat('data/max_label_', dataSet, '.mat');
 load(path);
-
-% Deprecated
-% switch dataSet
-%     case 'cali'
-%         [XTrain, YTrain, XVal, YVal, XTest, YTest] = load(path);
-%     
-%     case 'bodyfat'
-%         load bodyfat_dataset
-%         XTrain = bodyfatInputs;
-%         YTrain = bodyfatTargets;
-% end
+load(max_label);
 
 %% One example using Linear regression and MSE
 
@@ -81,6 +71,9 @@ cost = optimizedFunction(theta,model,costFunction,XTrain,YTrain);
 
 % Predict YPred once
 YPred = predictY(model,theta,XTrain);
+
+% Denormalize the predictions
+YPred = YPred * max_label;
 % calculate cost multiple times with different cost functions
 MSE = calculateCost('MSE',YPred,YTrain)
 MAE = calculateCost('MAE',YPred,YTrain)
