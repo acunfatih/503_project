@@ -1,12 +1,12 @@
-function [XTrain, YTrain, XVal, YVal, XTest, YTest] = preprocess_save_data(name)
+function [XTrain, YTrain, XVal, YVal, XTest, YTest,minData,rangeData] = preprocess_save_data(name)
     switch name
         case 'cali'
-            [data, max_label] = get_cali_data();
+            [data, max_label,minData,rangeData] = get_cali_data();
     end
     split_ratio = [0.7,0.15,0.15];
     [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_data(data, split_ratio);
     file_name = strcat('data/',strcat(name + ".mat"));
-    save(convertStringsToChars(file_name), 'XTrain', 'YTrain', 'XVal', 'YVal', 'XTest', 'YTest');    
+    save(convertStringsToChars(file_name), 'XTrain', 'YTrain', 'XVal', 'YVal', 'XTest', 'YTest','minData','rangeData');    
 
     save(convertStringsToChars(strcat('data/max_label_', strcat(name + ".mat"))), 'max_label');
     
@@ -36,7 +36,7 @@ function [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_data(data, split_rat
     
 end
 
-function [cali_data,max_label] = get_cali_data()
+function [cali_data,max_label,minData,rangeData] = get_cali_data()
     cali_data_raw = readtable("data/california_housing.csv");
     % 'dropping ocean_proximity column'
     cali_data_raw.ocean_proximity = [];
@@ -54,14 +54,14 @@ function [cali_data,max_label] = get_cali_data()
     % Normalize data
     max_label = max(cali_data(:,end));
     cali_data(:,1) = abs(cali_data(:,1));
-    cali_data = norm_zero2one(cali_data);
+    [cali_data,minData,rangeData] = norm_zero2one(cali_data);
 
     % Shuffle the data
     shuffled_array = cali_data(randperm(size(cali_data,1)),:);
     cali_data = shuffled_array;
 end
 
-function norm_data = norm_zero2one(data)
+function [norm_data,minData,rangeData] = norm_zero2one(data)
     minData = min(data);
     rangeData = range(data);
     norm_data  = (data - minData)./rangeData;

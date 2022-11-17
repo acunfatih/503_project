@@ -73,7 +73,9 @@ cost = optimizedFunction(theta,model,costFunction,XTrain,YTrain);
 YPred = predictY(model,theta,XTrain);
 
 % Denormalize the predictions
-YPred = YPred * max_label;
+YPred = YPred * rangeData(end) + minData(end);
+YTrain = YTrain * rangeData(end) + minData(end);
+
 % calculate cost multiple times with different cost functions
 MSE = calculateCost('MSE',YPred,YTrain)
 MAE = calculateCost('MAE',YPred,YTrain)
