@@ -19,7 +19,9 @@ model = 'LinearRegression';
 % Current CostFunction Options
 % 1. MSE (Mean Square Error)
 % 2. MAE (Mean Absolute Error)
-costFunction = 'MAE';
+% 3. GME (Geometric Mean Error)
+% 4. CWE (Class Weighted Error)
+costFunction = 'CWE';
 
 % optimizer can be moved here too but I didn't want to touch to not to 
 % change the code
@@ -79,9 +81,8 @@ YTrain = YTrain * rangeData(end) + minData(end);
 % calculate cost multiple times with different cost functions
 MSE = calculateCost('MSE',YPred,YTrain)
 MAE = calculateCost('MAE',YPred,YTrain)
-
-
-
+GME = calculateCost('GME',YPred,YTrain)
+CWE = calculateCost('CWE',YPred,YTrain)
 
 
 
