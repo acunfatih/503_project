@@ -71,8 +71,8 @@ figure(2)
 histfit(label,bin_number,'kernel')
 skewness(label)
 
-s_data = [features' label'];
-writematrix(s_data, 's_data2.csv')
+%s_data = [features' label'];
+%writematrix(s_data, '1D_sdata2_0.33.csv')
 %% Function to calculate the feature space
 function [x_value] = x_function(y)
 

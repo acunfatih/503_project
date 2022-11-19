@@ -9,7 +9,8 @@ clc
 clear  all
 
 bin_number = 10;
-features = [];
+feature1 = [];
+feature2 = [];
 label = [];
 
 r = 1.1; %dataset 2: change this value [1.1 - 2] to get different skewness | do NOT set it to exactly 1! 
@@ -24,7 +25,7 @@ data2 = rand(1,10);
 data2 = data2/sum(data2); %normalization
 data2 = data2*1000; %scaling sum to 1000
 
-%data_dist = round(data2); %uncomment this to generate the dataset 1:
+data_dist = round(data2); %uncomment this to generate the dataset 1:
 %uniformly distributed random numbers
 
 
@@ -42,52 +43,65 @@ sum(data_dist)
 %% Main code for data generation in each bin
 % Label space cnts between [0,10];
 
+
 for n = 1:bin_number
     data_points = data_dist(n);
     
-    min = 0.1 + (n-1);
-    max = min + 0.9; 
-    converged = 0;
-    for i = 1:data_points
-        while (converged == 0)
-            y_val = y_function(x1,x2);
+    minn = 0.01 + (n-1)/10;
+    maxx = minn + 0.09; 
 
-            if y_val >= min && y_val <= max
+    for i = 1:data_points
+        converged = 0;
+        iteration = 0;
+        while (converged == 0)
+            iteration = iteration + 1; 
+            fprintf('Iteration: %d\n',iteration)
+            
+            x1 = rand;
+            x2 = rand;
+            
+            y_val = y_function(x1,x2)*minn; %% ADD NOISE HERE!!! in case you need
+
+            if y_val >= minn && y_val <= maxx
             converged = 1;
+            label = [label; y_val];
+            feature1 = [feature1; sqrt(x1)];
+            feature2 = [feature2; x2];
             end
         end
-  end
-    %interval = zeros(1, data_points);
-    %for i = 1:data_points
-        %interval(i) = min + rand*(max - min); %ensures that random number does not exceed the interval length
-    %end
-    label = [label interval];
-    
-    for j = 1:data_points
-        %second term is noise
-        rand(
-        x_measure = y_function(interval(j)) %+ normrnd(0,0.1);    
-        features = [features x_measure];
-    
     end
-   
+        %x_measure = y_function(interval(j)) %+ normrnd(0,0.1);    
+       
+    
 end
 
-figure(1)
-scatter(features, label', 'filled')
-xlabel('features')
-ylabel('labels')
-title('synthetic data set 2')
+%figure(1)
+%scatter(feature1, label, 'filled')
 
-figure(2)
+
+figure(1)
 histfit(label,bin_number,'kernel')
 skewness(label)
 
-s_data = [features' label'];
-writematrix(s_data, 's_data2.csv')
-%% Function to calculate the feature space
-function [x_value] = y_function(y)
+N = 250;
+xvec = linspace(min(feature1), max(feature1), N);
+yvec = linspace(min(feature2), max(feature2), N);
+[X, Y] = ndgrid(xvec, yvec);
+F = scatteredInterpolant(feature1, feature2, label);
+Z = F(X, Y);
+figure(2)
+surf(X, Y, Z, 'edgecolor', 'none');
+xlabel('feature 1')
+ylabel('feature 2')
+zlabel('label')
+title('2D synthetic data set 1')
 
-x_value = sqrt(y);
+%s_data = [feature1 feature2 label];
+%writematrix(s_data, '2D_sdata1_0.05.csv')
+%% Function to calculate the feature space
+function [y_value] = y_function(x1, x2)
+
+y_value = x1.^2 + x2;
 
 end
+
