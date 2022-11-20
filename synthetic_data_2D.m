@@ -16,7 +16,7 @@ feature2 = [];
 label = [];
 npts = 1000;
 
-r = 1.1; %dataset 2: change this value [1.1 - 2] to get different skewness 
+r = 1.9; %dataset 2: change this value [1.1 - 2] to get different skewness 
 if r == 1
     data_dist = ones(1,10) * round(npts/bin_number);
 else
@@ -150,7 +150,7 @@ set(gcf,'color','white')
 
 
 s_data = [feature1 feature2 label];
-writematrix(s_data, sprintf('2D_sdata1_r%.2f.csv',r))
+writematrix(s_data, sprintf('data/2D_sdata1_r%.2f.csv',r))
 
 %% Function to calculate the feature space
 function [y_value] = y_function(x1, x2)
