@@ -138,7 +138,8 @@ for j = 1:4
     xlabel('r (skewness)')
     ylabel(CFList2{j})
     ylim([0.05,.12])
-    legend(CFList)
+    lgd = legend(CFList);
+    title(lgd,'Training Cost Function')
 end
 
 
