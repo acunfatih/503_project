@@ -7,6 +7,7 @@ function cost = calculateCost(costFunction,YPred,YTrain)
             cost = mean((YTrain-YPred).^2);
         case 'MAE'
             cost = mean(abs(YTrain-YPred));
+
         case 'GME'
             if mean(YTrain) > median(YTrain)
                 % Top Heavy
@@ -34,6 +35,10 @@ function cost = calculateCost(costFunction,YPred,YTrain)
             cost_n = mean(abs(YTrain(~idx_p)-YPred(~idx_p)));
             w = .5;
             cost = w*cost_p + (1-w)*cost_n;
+
+        case 'MAPE'
+            cost = mean(abs(YTrain-YPred)/YPred);
+
     end
     
 end

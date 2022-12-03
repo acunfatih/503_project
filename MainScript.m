@@ -59,11 +59,11 @@ options = optimset('Display',...
                     'TolFun',1e-4);
 
 [theta,fval] = fminsearch(fun,theta0,options);
-[theta2,fval2] = fminunc(fun,theta0,options);
+% [theta2,fval2] = fminunc(fun,theta0,options);
 % There are two difference search algorithms we can use. Take better of two
-if fval2 < fval
-    theta = theta2;
-end
+% if fval2 < fval
+%     theta = theta2;
+% end
 
 % Evaluate performance (can use optimizedFunction or can use other method)
 
@@ -83,7 +83,6 @@ MSE = calculateCost('MSE',YPred,YTrain)
 MAE = calculateCost('MAE',YPred,YTrain)
 GME = calculateCost('GME',YPred,YTrain)
 CWE = calculateCost('CWE',YPred,YTrain)
-
-
+MAPE = calculateCost('MAPE',YPred,YTrain)
 
 
