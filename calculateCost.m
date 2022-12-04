@@ -38,6 +38,13 @@ function cost = calculateCost(costFunction,YPred,YTrain,hyp)
 
         case 'MAPE'
             cost = mean(abs(YTrain-YPred)/YPred);
+            
+        case 'BMSE'
+            sumVal = 0;
+            for i = 1:length(YPred)
+                sumVal = sumVal + exp(-sqrt(mean((YPred(i)-YTrain(i)).^2))/(2*hyp.sigma.^2));
+            end
+            cost = -log((exp(-sqrt(mean((YPred-YTrain).^2))/(2*hyp.sigma.^2))./sumVal));
 
     end
     

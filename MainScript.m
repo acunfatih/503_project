@@ -21,13 +21,16 @@ model = 'LinearRegression';
 % 2. MAE (Mean Absolute Error)
 % 3. GME (Geometric Mean Error)
 % 4. CWE (Class Weighted Error)
-costFunction = 'CWE';
+% 5. BMSE (Balanced MSE)
+% 6. MAPE (Mean Absolute Percentage Error)
+costFunction = 'BMSE';
 
 
 % hyperparameters for cost functions. These are variables that will not be
 % optimized by the optimizer, but may be necessary to change.
 hyp.w = .5;
 hyp.thresh = 90; %Percentile
+hyp.sigma = 1;
 
 
 % Optimize theta (Note, if the model and cost function you are using has a
@@ -89,6 +92,7 @@ MSE = calculateCost('MSE',YPred,YTrain,hyp)
 MAE = calculateCost('MAE',YPred,YTrain,hyp)
 GME = calculateCost('GME',YPred,YTrain,hyp)
 CWE = calculateCost('CWE',YPred,YTrain,hyp)
+BMSE = calculateCost('BMSE',YPred,YTrain,hyp)
 MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
 
 
