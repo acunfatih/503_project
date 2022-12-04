@@ -1,6 +1,6 @@
 % Calculate Cost based on cost function
 
-function cost = calculateCost(costFunction,YPred,YTrain)
+function cost = calculateCost(costFunction,YPred,YTrain,hyp)
 
     switch costFunction
         case 'MSE'
@@ -11,11 +11,11 @@ function cost = calculateCost(costFunction,YPred,YTrain)
         case 'GME'
             if mean(YTrain) > median(YTrain)
                 % Top Heavy
-                t_E = prctile(YTrain,90);
+                t_E = prctile(YTrain,hyp.thresh);
                 idx_p = YTrain >= t_E;
             else
                 % Bottom Heavy (Reversed from paper)
-                t_E = prctile(YTrain,10);
+                t_E = prctile(YTrain,100-hyp.thresh);
                 idx_p = YTrain <= t_E;
             end
             cost_p = mean(abs(YTrain(idx_p)-YPred(idx_p)));
@@ -24,16 +24,16 @@ function cost = calculateCost(costFunction,YPred,YTrain)
         case 'CWE'
             if mean(YTrain) > median(YTrain)
                 % Top Heavy
-                t_E = prctile(YTrain,90);
+                t_E = prctile(YTrain,hyp.thresh);
                 idx_p = YTrain >= t_E;
             else
                 % Bottom Heavy (Reversed from paper)
-                t_E = prctile(YTrain,10);
+                t_E = prctile(YTrain,100-hyp.thresh);
                 idx_p = YTrain <= t_E;
             end
             cost_p = mean(abs(YTrain(idx_p)-YPred(idx_p)));
             cost_n = mean(abs(YTrain(~idx_p)-YPred(~idx_p)));
-            w = .5;
+            w = hyp.w;
             cost = w*cost_p + (1-w)*cost_n;
 
         case 'MAPE'

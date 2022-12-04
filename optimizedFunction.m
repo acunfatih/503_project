@@ -1,13 +1,13 @@
 %% This function is used in fminsearch to optimize theta
 
 
-function cost = optimizedFunction(theta,model,costFunction,XTrain,YTrain)
+function cost = optimizedFunction(theta,model,costFunction,XTrain,YTrain,hyp)
 
     % Predict YPred
     YPred = predictY(model,theta,XTrain);
 
     % calculate cost
-    cost = calculateCost(costFunction,YPred,YTrain);
+    cost = calculateCost(costFunction,YPred,YTrain,hyp);
     
 
 end
