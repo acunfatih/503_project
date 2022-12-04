@@ -23,14 +23,15 @@ model = 'LinearRegression';
 % 4. CWE (Class Weighted Error)
 % 5. BMSE (Balanced MSE)
 % 6. MAPE (Mean Absolute Percentage Error)
-costFunction = 'BMSE';
+% 7. RR (Ridge Regression)
+costFunction = 'RR';
 
 
 % hyperparameters for cost functions. These are variables that will not be
 % optimized by the optimizer, but may be necessary to change.
 hyp.w = .5;
 hyp.thresh = 90; %Percentile
-hyp.sigma = 1;
+hyp.sigma = .1;
 
 
 % Optimize theta (Note, if the model and cost function you are using has a
@@ -56,29 +57,30 @@ load(max_label);
 
 %% One example using Linear regression and MSE
 
-% Define optimizer function that will be used to find optimized theta
-fun = @(theta)optimizedFunction(theta,model,costFunction,XTrain,YTrain,hyp);
+switch costFunction
+    case 'RR'
+        k = 5e-3;
+        theta = ridge(YTrain',XTrain',k,0);
+    otherwise
 
-% Initialize theta0 randomly. theta0 must have the correct size for the model that
-% you are using.
-d = size(XTrain,1);
-theta0 = initializeTheta(model,d);
+        % Define optimizer function that will be used to find optimized theta
+        fun = @(theta)optimizedFunction(theta,model,costFunction,XTrain,YTrain,hyp);
+
+        % Initialize theta0 randomly. theta0 must have the correct size for the model that
+        % you are using.
+        d = size(XTrain,1);
+        theta0 = initializeTheta(model,d);
 
 
 
 
-[theta,fval] = fminsearch(fun,theta0,options);
-[theta2,fval2] = fminunc(fun,theta0,options);
-% There are two difference search algorithms we can use. Take better of two
-if fval2 < fval
-    theta = theta2;
+        [theta,fval] = fminsearch(fun,theta0,options);
+        [theta2,fval2] = fminunc(fun,theta0,options);
+        % There are two difference search algorithms we can use. Take better of two
+        if fval2 < fval
+            theta = theta2;
+        end
 end
-
-% Evaluate performance (can use optimizedFunction or can use other method)
-
-cost = optimizedFunction(theta,model,costFunction,XTrain,YTrain,hyp);
-
-% OR
 
 % Predict YPred once
 YPred = predictY(model,theta,XTrain);
