@@ -32,6 +32,7 @@ costFunction = 'RR';
 hyp.w = .5;
 hyp.thresh = 90; %Percentile
 hyp.sigma = .1;
+hyp.lambda = 5e-3;
 
 
 % Optimize theta (Note, if the model and cost function you are using has a
@@ -59,8 +60,7 @@ load(max_label);
 
 switch costFunction
     case 'RR'
-        k = 5e-3;
-        theta = ridge(YTrain',XTrain',k,0);
+        theta = ridge(YTrain',XTrain',hyp.lambda,0);
     otherwise
 
         % Define optimizer function that will be used to find optimized theta
