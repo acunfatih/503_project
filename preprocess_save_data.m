@@ -2,6 +2,27 @@ function [XTrain, YTrain, XVal, YVal, XTest, YTest,minData,rangeData] = preproce
     switch name
         case 'cali'
             [data, max_label,minData,rangeData] = get_cali_data();
+        case 'synthetic_r1.1'
+            [data, max_label,minData,rangeData] = get_synt_data(1.1)
+        case 'synthetic_r1.2'
+            [data, max_label,minData,rangeData] = get_synt_data(1.2)
+        case 'synthetic_r1.3'
+            [data, max_label,minData,rangeData] = get_synt_data(1.3)
+        case 'synthetic_r1.4'
+            [data, max_label,minData,rangeData] = get_synt_data(1.4)
+        case 'synthetic_r1.5'
+            [data, max_label,minData,rangeData] = get_synt_data(1.5)
+        case 'synthetic_r1.6'
+            [data, max_label,minData,rangeData] = get_synt_data(1.6)
+        case 'synthetic_r1.7'
+            [data, max_label,minData,rangeData] = get_synt_data(1.7)
+        case 'synthetic_r1.8'
+            [data, max_label,minData,rangeData] = get_synt_data(1.8)
+        case 'synthetic_r1.9'
+            [data, max_label,minData,rangeData] = get_synt_data(1.9)
+        case 'synthetic_r2.0'
+            [data, max_label,minData,rangeData] = get_synt_data(2.0)
+            
     end
     split_ratio = [0.7,0.15,0.15];
     [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_data(data, split_ratio);
@@ -66,4 +87,19 @@ function [norm_data,minData,rangeData] = norm_zero2one(data)
     minData = min(data);
     rangeData = range(data);
     norm_data  = (data - minData)./rangeData;
+end
+
+function [synt_data,max_label,minData,rangeData] = get_synt_data(r_value)
+
+    file_name = sprintf("data/2D_sdata1_r%.2f.csv",r_value);
+    synt_data_raw = readtable(file_name);
+    
+    synt_data =  table2array(synt_data_raw);
+    synt_label = synt_data(:,3);
+    
+    %Normalization?
+    max_label = max(synt_label);
+    minData = min(synt_data);
+    rangeData = range(synt_data);
+    
 end

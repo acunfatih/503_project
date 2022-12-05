@@ -16,7 +16,7 @@ feature2 = [];
 label = [];
 npts = 1000;
 
-r = 2 %dataset 2: change this value [1 - 2] to get different skewness 
+r = 2.0 %dataset 2: change this value [1 - 2] to get different skewness 
 if r == 1 %equal distribution
     data_dist = ones(1,10) * round(npts/bin_number);
 else
@@ -101,14 +101,13 @@ Z = F(X, Y);
 Z_truth = y_function(X,Y);
 
 
-
 % plot histogram
 figure(1)
 histogram(label,bin_number)
-skewness(label)
-%fprint(""
 set(gcf,'color','white')
 title(sprintf('2D synthetic data set: r = %.2f',r))
+skewv = skewness(label);
+fprintf('Skewness: %d\n',skewv)
 
 % Plot samples data
 figure(2)
@@ -119,26 +118,28 @@ zlabel('label')
 title(sprintf('2D synthetic data set: r = %.2f',r))
 set(gcf,'color','white')
 
-figure
+figure(3)
+subplot(1,2,1)
 contourf(X,Y,Z)
 xlabel('feature 1')
 ylabel('feature 2')
 zlabel('label')
-title(sprintf('2D synthetic data set: r = %.2f',r))
+colorbar
+title(sprintf('synthetic dataset: r = %.2f',r'))
 set(gcf,'color','white')
 
 % Plot underlying function 
-figure
+subplot(1,2,2)
 contourf(X,Y,Z_truth)
 xlabel('feature 1')
 ylabel('feature 2')
 zlabel('label')
 colorbar
-title('2D synthetic data set: Underlying Function')
+title('Underlying Function')
 set(gcf,'color','white')
 
 % Plot underlying function with sample points
-figure
+figure(4)
 contour(X, Y, Z_truth);
 hold on
 scatter(feature1, feature2,15,label,'Filled')
@@ -151,7 +152,7 @@ set(gcf,'color','white')
 
 
 s_data = [feature1 feature2 label];
-%writematrix(s_data, sprintf('data/2D_sdata1_r%.2f.csv',r))
+writematrix(s_data, sprintf('data/2D_sdata1_r%.2f.csv',r))
 
 %% Underlying function
 function [y_value] = y_function(x1, x2)
