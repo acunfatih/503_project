@@ -31,13 +31,14 @@ costFunction = 'RR';
 
 % hyperparameters for cost functions. These are variables that will not be
 % optimized by the optimizer, but may be necessary to change.
-hyp.w = .5;
-hyp.thresh = 90; %Percentile
-hyp.sigma = .1;
-hyp.lambda = 5e-3;
-hyp.k_sigma = .1; %Must be > 0.
-hyp.c = 0; % Must be >= 0.
+hyp.w = .5; %Used by CWE
+hyp.thresh = 90; %Percentile; Used by CWE,GME
+hyp.sigma = .1; %Used by BMSE
+hyp.lambda = 5e-3; %Used by RR and KRR
 hyp.kernel = 'RBF'; % Options: linear or RBF
+hyp.k_sigma = .1; %Must be > 0. Used by KRR-RBF
+hyp.c = 0; % Must be >= 0. Used by KRR-linear
+
 
 
 % Optimize theta (Note, if the model and cost function you are using has a
