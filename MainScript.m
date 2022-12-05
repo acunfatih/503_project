@@ -25,7 +25,7 @@ model = 'LinearRegression';
 % 6. MAPE (Mean Absolute Percentage Error)
 % 7. RR (Ridge Regression)
 % 8. KRR (Kernel Ridge Regression: Very Slow)
-costFunction = 'KRR';
+costFunction = 'MSE';
 
 
 % hyperparameters for cost functions. These are variables that will not be
@@ -36,7 +36,7 @@ hyp.sigma = .1;
 hyp.lambda = 5e-3;
 hyp.k_sigma = .1; %Must be > 0.
 hyp.c = 0; % Must be >= 0.
-hyp.kernel = 'linear'; % Options: linear or RBF
+hyp.kernel = 'RBF'; % Options: linear or RBF
 
 
 % Optimize theta (Note, if the model and cost function you are using has a
@@ -107,3 +107,4 @@ BMSE = calculateCost('BMSE',YPred,YTrain,hyp)
 MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
 
 
+plotParity(YTrain,YPred)
