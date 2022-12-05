@@ -45,6 +45,9 @@ function cost = calculateCost(costFunction,YPred,YTrain,hyp)
                 sumVal = sumVal + exp(-sqrt(mean((YPred(i)-YTrain(i)).^2))/(2*hyp.sigma.^2));
             end
             cost = -log((exp(-sqrt(mean((YPred-YTrain).^2))/(2*hyp.sigma.^2))./sumVal));
+        
+        case 'PLOSS'
+            cost = mean((YTrain-YPred).^2 + ((YTrain - YPred).^2+10^-9) .* hyp.phi_y);
 
     end
     

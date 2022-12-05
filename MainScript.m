@@ -6,8 +6,8 @@ clc
 %% Configurations
 
 % name of the dataset
-dataSet = 'synthetic';
 r_value = 1.1; %we need this value for calling the preprocess_save_Data
+dataSet = 'cali';
 
 % preprocess the existing data and save to .mat, takes values 0 or 1
 preprocess = 1; 
@@ -26,7 +26,8 @@ model = 'LinearRegression';
 % 6. MAPE (Mean Absolute Percentage Error)
 % 7. RR (Ridge Regression)
 % 8. KRR (Kernel Ridge Regression: Very Slow)
-costFunction = 'RR';
+% 9. PLOSS (Probabilistic Loss)
+costFunction = 'PLOSS';
 
 
 % hyperparameters for cost functions. These are variables that will not be
@@ -59,6 +60,10 @@ end
 path = strcat('data/', dataSet, '.mat');
 load(path);
 
+%%
+if strcmp(costFunction, 'PLOSS')
+    hyp.phi_y = fitProbabilisticLoss(YTrain, 0);
+end
 
 %% One example using Linear regression and MSE
 
@@ -69,6 +74,7 @@ switch costFunction
         
     case 'KRR'
         [K_fun,invK,K] = KRR(XTrain,hyp);
+
     otherwise
 
         % Define optimizer function that will be used to find optimized
@@ -89,7 +95,7 @@ switch costFunction
         end
 end
 
-% Predict YPred 
+
 if strcmp(costFunction,'KRR')
     YPred = predictYKernel(XTrain,YTrain,XTrain,K_fun,invK,K);
 else
@@ -110,3 +116,4 @@ MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
 
 
 plotParity(YTrain,YPred)
+
