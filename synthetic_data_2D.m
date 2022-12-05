@@ -16,20 +16,20 @@ feature2 = [];
 label = [];
 npts = 1000;
 
-r = 1.9; %dataset 2: change this value [1.1 - 2] to get different skewness 
-if r == 1
+r = 2 %dataset 2: change this value [1 - 2] to get different skewness 
+if r == 1 %equal distribution
     data_dist = ones(1,10) * round(npts/bin_number);
 else
     Sn = 1000; 
-    a1 = Sn*(r-1)/(r^bin_number-1);
-    an = a1*r^(bin_number-1);
+    a1 = Sn*(r-1)/(r^bin_number-1); %first term in geometric series
+    an = a1*r^(bin_number-1); %last term in the series
 
     data_dist = a1*r.^(0:bin_number-1);  
     data_dist = round(data_dist); %dataset 2: skewed 
 end
 
 data2 = rand(1,10);
-data2 = data2/sum(data2); %normalization
+data2 = data2/sum(data2); %normalization to add up to 1
 data2 = data2*1000; %scaling sum to 1000
 
 % data_dist = round(data2); %uncomment this to generate the dataset 1:
@@ -51,15 +51,17 @@ sum(data_dist)
 
 
 %% Main code for data generation in each bin
-% Label space cnts between [0,10];
+% Label space cnts between [0,2];
 
-
+%for each of ten bins
 for n = 1:bin_number
     data_points = data_dist(n);
     
+    %Interval lengh for each bin label space is 0.2
     minn = (n-1)/10 * 2;
     maxx = minn + 0.1 * 2; 
 
+    %for each point in each of 10 bins
     for i = 1:data_points
         converged = 0;
         iteration = 0;
@@ -81,8 +83,6 @@ for n = 1:bin_number
             end
         end
     end
- 
-       
     
 end
 
@@ -106,6 +106,7 @@ Z_truth = y_function(X,Y);
 figure(1)
 histogram(label,bin_number)
 skewness(label)
+%fprint(""
 set(gcf,'color','white')
 title(sprintf('2D synthetic data set: r = %.2f',r))
 
@@ -150,9 +151,9 @@ set(gcf,'color','white')
 
 
 s_data = [feature1 feature2 label];
-writematrix(s_data, sprintf('data/2D_sdata1_r%.2f.csv',r))
+%writematrix(s_data, sprintf('data/2D_sdata1_r%.2f.csv',r))
 
-%% Function to calculate the feature space
+%% Underlying function
 function [y_value] = y_function(x1, x2)
 
 y_value = x1.^2 + x2;
