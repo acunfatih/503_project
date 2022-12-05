@@ -6,7 +6,7 @@ clc
 %% Configurations
 
 % name of the dataset
-dataSet = 'cali';
+dataSet = 'synthetic_r1.1';
 
 % preprocess the existing data and save to .mat, takes values 0 or 1
 preprocess = 1; 
@@ -52,9 +52,8 @@ if preprocess
 end 
 %% Load dataset to use
 path = strcat('data/', dataSet, '.mat');
-max_label = strcat('data/max_label_', dataSet, '.mat');
 load(path);
-load(max_label);
+
 
 %% One example using Linear regression and MSE
 
