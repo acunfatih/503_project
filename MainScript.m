@@ -26,7 +26,7 @@ model = 'LinearRegression';
 % 6. MAPE (Mean Absolute Percentage Error)
 % 7. RR (Ridge Regression)
 % 8. KRR (Kernel Ridge Regression: Very Slow)
-costFunction = 'MSE';
+costFunction = 'RR';
 
 
 % hyperparameters for cost functions. These are variables that will not be
@@ -65,6 +65,7 @@ load(path);
 switch costFunction
     case 'RR'
         theta = ridge(YTrain',XTrain',hyp.lambda,0);
+        theta = [theta(2:end);theta(1)];
         
     case 'KRR'
         [K_fun,invK,K] = KRR(XTrain,hyp);
