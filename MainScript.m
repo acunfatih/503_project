@@ -6,7 +6,8 @@ clc
 %% Configurations
 
 % name of the dataset
-dataSet = 'synthetic_r1.1';
+dataSet = 'synthetic';
+r_value = 1.1; %we need this value for calling the preprocess_save_Data
 
 % preprocess the existing data and save to .mat, takes values 0 or 1
 preprocess = 1; 
@@ -52,7 +53,7 @@ options = optimset('Display',...
 
 %% preprocess 
 if preprocess
-    preprocess_save_data(dataSet);
+    preprocess_save_data(dataSet,r_value);
 end 
 %% Load dataset to use
 path = strcat('data/', dataSet, '.mat');

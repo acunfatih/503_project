@@ -1,27 +1,9 @@
-function [XTrain, YTrain, XVal, YVal, XTest, YTest,minData,rangeData] = preprocess_save_data(name)
+function [XTrain, YTrain, XVal, YVal, XTest, YTest,minData,rangeData] = preprocess_save_data(name,r)
     switch name
         case 'cali'
             [data, maxLabel,minData,rangeData] = get_cali_data();
-        case 'synthetic_r1.1'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.1);
-        case 'synthetic_r1.2'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.2)
-        case 'synthetic_r1.3'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.3)
-        case 'synthetic_r1.4'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.4)
-        case 'synthetic_r1.5'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.5)
-        case 'synthetic_r1.6'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.6)
-        case 'synthetic_r1.7'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.7)
-        case 'synthetic_r1.8'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.8)
-        case 'synthetic_r1.9'
-            [data, maxLabel,minData,rangeData] = get_synt_data(1.9)
-        case 'synthetic_r2.0'
-            [data, maxLabel,minData,rangeData] = get_synt_data(2.0)
+        case 'synthetic'
+            [data, maxLabel,minData,rangeData] = get_synt_data(r);
             
     end
     split_ratio = [0.7,0.15,0.15];
@@ -83,11 +65,6 @@ function [cali_data,maxLabel,minData,rangeData] = get_cali_data()
     cali_data = shuffled_array;
 end
 
-function [norm_data,minData,rangeData] = norm_zero2one(data)
-    minData = min(data);
-    rangeData = range(data);
-    norm_data  = (data - minData)./rangeData;
-end
 
 function [synt_data,maxLabel,minData,rangeData] = get_synt_data(r_value)
 
@@ -95,11 +72,17 @@ function [synt_data,maxLabel,minData,rangeData] = get_synt_data(r_value)
     synt_data_raw = readtable(file_name);
     
     synt_data =  table2array(synt_data_raw);
-    synt_label = synt_data(:,3);
+    synt_label = synt_data(:,3); %extracting labels
     
-    %Normalization?
+    %Normalization
     maxLabel = max(synt_label);
-    minData = min(synt_data);
-    rangeData = range(synt_data);
-    
+    [synt_data,minData,rangeData] = norm_zero2one(synt_data);
 end
+
+
+function [norm_data,minData,rangeData] = norm_zero2one(data)
+    minData = min(data);
+    rangeData = range(data);
+    norm_data  = (data - minData)./rangeData;
+end
+
