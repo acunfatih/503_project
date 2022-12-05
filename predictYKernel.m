@@ -3,7 +3,7 @@
 function YPred = predictYKernel(XTrain,YTrain,XTest,K_fun,invK,K)
     nTrain = size(XTrain,2);
     nPred = size(XTest,2);
-    YPred = zeros(nPred,1);
+    YPred = zeros(1,nPred);
     ONEn = ones(nTrain,1);
     Cn = eye(nTrain) - 1/nTrain * (ONEn * ONEn');
       
