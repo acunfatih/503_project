@@ -1,6 +1,7 @@
 % Rec Curves
 
 function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT)
+    w = hyp.w;
     n = length(YTrain);
     if mean(YTrain) > median(YTrain)
         % Top Heavy
@@ -17,15 +18,26 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT)
     Accuracy = zeros(1,length(epsilonList));
     for i = 1:length(epsilonList)
         epsilon = epsilonList(i);
-        idxCost = cost > epsilon;
-        idx_p2 = idx_p;
-        idx_p2(idxCost) = 1 - idx_p(idxCost);   
-        Accuracy(i) = sum(idx_p2 == idx_p)/n;
+        
+        TPR = sum(cost(idx_p) <= epsilon)/n;
+        AccuracyTPR(i) = TPR;
+        
+        TNR = sum(cost(~idx_p) <= epsilon)/n;
+        AccuracyTNR(i) = TNR;
+        
+        AccuracyGM(i) = sqrt(TPR * TNR);
+        
+        AccuracyCWA(i) = w*TPR + (1-w) * TNR;
     end
     
     if PLOT
         figure
-        plot(epsilonList,Accuracy)
+        plot(epsilonList,AccuracyTPR)
+        hold on
+        plot(epsilonList,AccuracyTNR)
+        plot(epsilonList,AccuracyGM)
+        plot(epsilonList,AccuracyCWA)
+        legend('REC_{TPR}','REC_{TNR}','REC_{G-Mean}','REC_{CWA}')
         xlabel('tolerance \epsilon')
         ylabel('Accurancy')
     end
