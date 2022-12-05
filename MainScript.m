@@ -7,7 +7,8 @@ clc
 
 % name of the dataset
 r_value = 1.1; %we need this value for calling the preprocess_save_Data
-dataSet = 'cali';
+% dataSet = 'cali';
+dataSet = 'synthetic';
 
 % preprocess the existing data and save to .mat, takes values 0 or 1
 preprocess = 1; 
@@ -117,4 +118,4 @@ MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
 
 
 plotParity(YTrain,YPred)
-
+[epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1)
