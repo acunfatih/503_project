@@ -14,15 +14,15 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT)
     end
     
     cost = abs(YTrain-YPred);
-    epsilonList = 0:.01:1;
+    epsilonList = linspace(0,max(YTrain));
     Accuracy = zeros(1,length(epsilonList));
     for i = 1:length(epsilonList)
         epsilon = epsilonList(i);
         
-        TPR = sum(cost(idx_p) <= epsilon)/n;
+        TPR = sum(cost(idx_p) <= epsilon)/sum(idx_p);
         AccuracyTPR(i) = TPR;
         
-        TNR = sum(cost(~idx_p) <= epsilon)/n;
+        TNR = sum(cost(~idx_p) <= epsilon)/sum(~idx_p);
         AccuracyTNR(i) = TNR;
         
         AccuracyGM(i) = sqrt(TPR * TNR);
