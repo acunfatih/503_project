@@ -48,7 +48,9 @@ function cost = calculateCost(costFunction,YPred,YTrain,hyp)
         
         case 'PLOSS'
             cost = mean((YTrain-YPred).^2 + ((YTrain - YPred).^2+10^-9) .* hyp.phi_y);
-
+        
+        case 'SERA'
+            cost = seraCost(YPred,Ytrain);
     end
     
 end
