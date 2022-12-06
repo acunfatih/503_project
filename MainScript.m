@@ -59,7 +59,11 @@ if preprocess
     preprocess_save_data(dataSet,r_value);
 end 
 %% Load dataset to use
-path = strcat('data/', dataSet, '.mat');
+if strcmp(dataSet,'synthetic')
+    path = sprintf('data/synthetic%.1f.mat',r_value);
+else
+    path = strcat('data/', dataSet, '.mat');
+end
 load(path);
 
 %%
@@ -118,4 +122,4 @@ MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
 
 
 plotParity(YTrain,YPred)
-[epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1)
+[epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1);
