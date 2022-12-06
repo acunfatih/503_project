@@ -43,14 +43,14 @@ end
 
 %
 function [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_synt(data)
-    XTrain = data([1:700],[1:2]);
-    YTrain = data([1:700],3);
+    XTrain = data([1:700],[1:2])';
+    YTrain = data([1:700],3)';
     
-    XVal = data([701:850],[1:2]);
-    YVal = data([701:850],3);
+    XVal = data([701:850],[1:2])';
+    YVal = data([701:850],3)';
     
-    XTest = data([851:1000],[1:2]);
-    YTest = data([851:1000],3);
+    XTest = data([851:1000],[1:2])';
+    YTest = data([851:1000],3)';
     
 end
 
