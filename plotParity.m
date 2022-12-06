@@ -1,6 +1,6 @@
 % Plot parity plot
 
-function plotParity(YTrain,YPred)
+function plotParity(YTrain,YPred, path)
 
     figure
     scatter(YTrain,YPred,'filled','MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3)
@@ -17,6 +17,6 @@ function plotParity(YTrain,YPred)
     legend('Data Points','y = x Reference Line','Location','NorthWest')
     xlabel('Actual')
     ylabel('Predicted')
-    
+    savefig(path);
 
 end

@@ -95,10 +95,10 @@ switch costFunction
 
         % Optimize function. There are two difference search algorithms we can use. Take better of two
         [theta,fval] = fminsearch(fun,theta0,options);
-        [theta2,fval2] = fminunc(fun,theta0,options);
-        if fval2 < fval
-            theta = theta2;
-        end
+%         [theta2,fval2] = fminunc(fun,theta0,options);
+%         if fval2 < fval
+%             theta = theta2;
+%         end
 end
 
 
@@ -120,6 +120,22 @@ CWE = calculateCost('CWE',YPred,YTrain,hyp)
 BMSE = calculateCost('BMSE',YPred,YTrain,hyp)
 MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
 
+path = strcat('results/', model,'_', dataSet, '_', costFunction);
+mkdir(path);
+plotParity(YTrain,YPred,strcat(path,'/parity'));
+[epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1,strcat(path,'/REC'));
 
-plotParity(YTrain,YPred)
-[epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1);
+%% 
+
+fid = fopen( 'results/results.csv', 'a+' );
+dataStr = dataSet;
+
+if strcmp(dataSet, "synthetic")
+    dataStr = strcat(dataSet,'_r=',num2str(r_value));
+end
+
+fprintf( fid, '%s,%s,%s,%f,%f,%f,%f,%f,%f,%s\n', model, dataStr, ...
+    costFunction, MSE, MAE, GME, CWE, BMSE, MAPE, datestr(now,'DD HH:MM:SS'));
+fclose( fid );
+
+

@@ -1,6 +1,6 @@
 % Rec Curves
 
-function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT)
+function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
     w = hyp.w;
     n = length(YTrain);
     if mean(YTrain) > median(YTrain)
@@ -40,5 +40,6 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT)
         legend('REC_{TPR}','REC_{TNR}','REC_{G-Mean}','REC_{CWA}')
         xlabel('tolerance \epsilon')
         ylabel('Accurancy')
+        savefig(path);
     end
 end
