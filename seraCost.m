@@ -2,7 +2,7 @@ function cost = seraCost(YPred, YTrain)
 
 a = (mean(YTrain)/std(YTrain))^2;
 b = (std(YTrain))^2/(mean(YTrain));
-phi_val = gampdf(YTrain, a); %relevance values
+phi_val = gampdf(YTrain, a, b); %relevance values
 phi_val = (phi_val - min(phi_val))/range(phi_val);
 phi_val = 1-phi_val;
 
