@@ -2,13 +2,15 @@ function [XTrain, YTrain, XVal, YVal, XTest, YTest,minData,rangeData] = preproce
     switch name
         case 'cali'
             [data, maxLabel,minData,rangeData] = get_cali_data();
+            split_ratio = [0.7,0.15,0.15];
+            [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_data(data, split_ratio);
         case 'synthetic'
             [data, maxLabel,minData,rangeData] = get_synt_data(r);
+            [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_synt(data);
             
     end
-    split_ratio = [0.7,0.15,0.15];
-    [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_data(data, split_ratio);
-    file_name = strcat('data/',strcat(name + ".mat"));
+    name2 = strcat(name,num2str(r,'%.1f'));
+    file_name = strcat('data/',strcat(name2 + ".mat"));
     save(convertStringsToChars(file_name), 'XTrain', 'YTrain', 'XVal', 'YVal', 'XTest', 'YTest','minData','rangeData', 'maxLabel');    
 
 %     save(convertStringsToChars(strcat('data/max_label_', strcat(name + ".mat"))), 'max_label');
@@ -39,6 +41,19 @@ function [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_data(data, split_rat
     
 end
 
+%
+function [XTrain, YTrain, XVal, YVal, XTest, YTest] = split_synt(data)
+    XTrain = data([1:700],[1:2]);
+    YTrain = data([1:700],3);
+    
+    XVal = data([701:850],[1:2]);
+    YVal = data([701:850],3);
+    
+    XTest = data([851:1000],[1:2]);
+    YTest = data([851:1000],3);
+    
+end
+
 function [cali_data,maxLabel,minData,rangeData] = get_cali_data()
     cali_data_raw = readtable("data/california_housing.csv");
     % 'dropping ocean_proximity column'
@@ -64,6 +79,7 @@ function [cali_data,maxLabel,minData,rangeData] = get_cali_data()
     shuffled_array = cali_data(randperm(size(cali_data,1)),:);
     cali_data = shuffled_array;
 end
+
 
 
 function [synt_data,maxLabel,minData,rangeData] = get_synt_data(r_value)

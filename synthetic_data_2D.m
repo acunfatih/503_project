@@ -11,26 +11,33 @@ clc
 rng('default')
 
 bin_number = 10;
+data_x1 = [];
+data_x2 = [];
+data_y = [];
+
+npts_vec = [700; 150; 150];
+r = 1.7 %dataset 2: change this value [1 - 1.7] to get different skewness 
+
+for k = 1:3
+npts = npts_vec(k);
+
 feature1 = [];
 feature2 = [];
 label = [];
-npts = 1000;
 
-r = 2.0 %dataset 2: change this value [1 - 2] to get different skewness 
 if r == 1 %equal distribution
     data_dist = ones(1,10) * round(npts/bin_number);
-else
-    Sn = 1000; 
-    a1 = Sn*(r-1)/(r^bin_number-1); %first term in geometric series
+else 
+    a1 = npts*(r-1)/(r^bin_number-1); %first term in geometric series
     an = a1*r^(bin_number-1); %last term in the series
 
     data_dist = a1*r.^(0:bin_number-1);  
     data_dist = round(data_dist); %dataset 2: skewed 
 end
 
-data2 = rand(1,10);
-data2 = data2/sum(data2); %normalization to add up to 1
-data2 = data2*1000; %scaling sum to 1000
+data_randm = rand(1,10);
+data_randm = data_randm/sum(data_randm); %normalization to add up to 1
+data_randm = data_randm*1000; %scaling sum to 1000
 
 % data_dist = round(data2); %uncomment this to generate the dataset 1:
 %uniformly distributed random numbers
@@ -41,11 +48,11 @@ data_dist = flip(data_dist);
 
 %this is to ensure that n_train = 1000
 if sum(data_dist) > npts
-   data_dist(1) = data_dist(1) - (sum(data_dist) - 1000); 
+   data_dist(1) = data_dist(1) - (sum(data_dist) - npts); 
 end
 
 if sum(data_dist) < npts
-    data_dist(1) = data_dist(1) - (sum(data_dist) - 1000);
+    data_dist(1) = data_dist(1) - (sum(data_dist) - npts);
 end
 sum(data_dist)
 
@@ -86,9 +93,14 @@ for n = 1:bin_number
     
 end
 
+data_x1  = [data_x1; feature1];
+data_x2  = [data_x2; feature2];
+data_y  = [data_y; label];
+
+end
 
 
-%% Plot data for visualization
+%% Plot TRAINING data for visualization
 % calculate grid to plot sampled data
 N = 250;
 xvec = linspace(min(feature1), max(feature1), N);
@@ -151,7 +163,7 @@ title(sprintf('2D synthetic data set: r = %.2f',r))
 set(gcf,'color','white')
 
 
-s_data = [feature1 feature2 label];
+s_data = [data_x1 data_x2 data_y];
 writematrix(s_data, sprintf('data/2D_sdata1_r%.2f.csv',r))
 
 %% Underlying function
