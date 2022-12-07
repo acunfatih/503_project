@@ -6,10 +6,12 @@ function [K_fun,invK,K] = KRR(XTrain,hyp)
         case 'linear'
             c = hyp.c;
             K = k_linear(XTrain, XTrain, c);
+            K_fun = @k_linear;
             
         case 'RBF'
             sigma = hyp.k_sigma;
             K = k_rbf(XTrain, XTrain, sigma);
+            K_fun = @k_rbf;
     end   
     
     nTrain = size(XTrain,2);
