@@ -31,7 +31,7 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
     end
     
     if PLOT
-        fig = figure;
+        fig = figure('Visible','off');
         plot(epsilonList,AccuracyTPR)
         hold on
         plot(epsilonList,AccuracyTNR)
@@ -41,6 +41,6 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
         xlabel('tolerance \epsilon')
         ylabel('Accurancy')
         savefig(path);
-        saveas(fig,[path,'.png'])
+        saveas(fig,strcat(path,'.png'))
     end
 end

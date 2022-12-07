@@ -118,22 +118,29 @@ function train_eval(r_value, dataSet, model, costFunction)
     
     if strcmp(costFunction,'KRR')
         YPred = predictYKernel(XTrain,YTrain,XTrain,K_fun,invK,K);
+        YPred_val = predictYKernel(XVal,YVal,XVal,K_fun,invK,K);
+        YPred_test = predictYKernel(XTest,YTest,XTest,K_fun,invK,K);
     else
         YPred = predictY(model,theta,XTrain);
+        YPred_val = predictY(model,theta,XVal);
+        YPred_test = predictY(model,theta,XTest);
     end
     
     % Denormalize the predictions
     YPred = YPred * rangeData(end) + minData(end);
     YTrain = YTrain * rangeData(end) + minData(end);
     
-    % calculate cost multiple times with different cost functions
-    MSE = calculateCost('MSE',YPred,YTrain,hyp)
-    MAE = calculateCost('MAE',YPred,YTrain,hyp)
-    GME = calculateCost('GME',YPred,YTrain,hyp)
-    CWE = calculateCost('CWE',YPred,YTrain,hyp)
-    BMSE = calculateCost('BMSE',YPred,YTrain,hyp)
-    MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
+    YPred_val = YPred_val * rangeData(end) + minData(end);
+    YVal = YVal * rangeData(end) + minData(end);
     
+    YPred_test = YPred_test * rangeData(end) + minData(end);
+    YTest = YTest * rangeData(end) + minData(end);
+    % calculate cost multiple times with different cost functions
+    
+    [MSE, MAE, GME, CWE, BMSE, MAPE] = inference(YPred, YTrain, hyp);
+    [MSE_val, MAE_val, GME_val, CWE_val, BMSE_val, MAPE_val] = inference(YPred_val, YVal, hyp);
+    [MSE_test, MAE_test, GME_test, CWE_test, BMSE_test, MAPE_test] = inference(YPred_test, YTest, hyp);
+
     dataStr = dataSet;
     
     if strcmp(dataSet, "synthetic")
@@ -145,14 +152,30 @@ function train_eval(r_value, dataSet, model, costFunction)
     plotParity(YTrain,YPred,strcat(path,'/parity'));
     [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1,strcat(path,'/REC'));
     
-    %% 
-    
-    fid = fopen( 'results/results.csv', 'a+' );
-    
-    
-    fprintf( fid, '%s,%s,%s,%f,%f,%f,%f,%f,%f,%s\n', model, dataStr, ...
-        costFunction, MSE, MAE, GME, CWE, BMSE, MAPE, datestr(now,'DD HH:MM:SS'));
+    %%
+    if ~isfile('results/results.csv')
+        fid = fopen( 'results/results.csv', 'w' );
+        fprintf(fid, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", 'model', 'dataStr', ...
+        'costFunction', 'MSE', 'MAE', 'GME', 'CWE', 'BMSE', 'MAPE', ...
+        'MSE_val', 'MAE_val', 'GME_val', 'CWE_val', 'BMSE_val', ...
+        'MAPE_val', 'MSE_test', 'MAE_test', 'GME_test', 'CWE_test', 'BMSE_test', 'MAPE_test', 'date');
+    else
+        fid = fopen( 'results/results.csv', 'a+' );
+    end
+    fprintf( fid, '%s,%s,%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n', model, dataStr, ...
+        costFunction, MSE, MAE, GME, CWE, BMSE, MAPE, ...
+        MSE_val, MAE_val, GME_val, CWE_val, BMSE_val, ...
+        MAPE_val, MSE_test, MAE_test, GME_test, CWE_test, BMSE_test, MAPE_test, datestr(now,'DD HH:MM:SS'));
     fclose( fid );
+end
+
+function [MSE, MAE, GME, CWE, BMSE, MAPE] = inference(Yhat, Y, hyp)
+    MSE = calculateCost('MSE',Yhat,Y,hyp);
+    MAE = calculateCost('MAE',Yhat,Y,hyp);
+    GME = calculateCost('GME',Yhat,Y,hyp);
+    CWE = calculateCost('CWE',Yhat,Y,hyp);
+    BMSE = calculateCost('BMSE',Yhat,Y,hyp);
+    MAPE = calculateCost('MAPE',Yhat,Y,hyp);
 end
 
 

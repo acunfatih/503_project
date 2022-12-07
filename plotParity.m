@@ -2,7 +2,7 @@
 
 function plotParity(YTrain,YPred, path)
 
-    fig = figure;
+    fig = figure('Visible','off');
     scatter(YTrain,YPred,'filled','MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3)
     hold on
     rangeVal = range([YTrain,YPred]);
@@ -18,6 +18,6 @@ function plotParity(YTrain,YPred, path)
     xlabel('Actual')
     ylabel('Predicted')
     savefig(path);
-    saveas(fig,[path,'.png'])
+    saveas(fig,strcat(path,'.png'))
 
 end
