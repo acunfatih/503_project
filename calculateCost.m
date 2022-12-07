@@ -41,10 +41,11 @@ function cost = calculateCost(costFunction,YPred,YTrain,hyp)
             
         case 'BMSE'
             sumVal = 0;
+            tau = 2*hyp.sigma.^2;
             for i = 1:length(YPred)
-                sumVal = sumVal + exp(-sqrt(mean((YPred(i)-YTrain(i)).^2))/(2*hyp.sigma.^2));
+                sumVal = sumVal + exp(-mean((YPred(i)-YTrain(i)).^2)/tau);
             end
-            cost = -log((exp(-sqrt(mean((YPred-YTrain).^2))/(2*hyp.sigma.^2))./sumVal));
+            cost = -log(exp(-mean((YPred-YTrain).^2)/tau)./sumVal);
         
         case 'PLOSS'
             cost = mean((YTrain-YPred).^2 + ((YTrain - YPred).^2+10^-9) .* hyp.phi_y);
