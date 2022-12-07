@@ -109,10 +109,10 @@ function train_eval(r_value, dataSet, model, costFunction)
     
             % Optimize function. There are two difference search algorithms we can use. Take better of two
             [theta,fval] = fminsearch(fun,theta0,options);
-%             [theta2,fval2] = fminunc(fun,theta0,options);
-%             if fval2 < fval
-%                 theta = theta2;
-%             end
+            [theta2,fval2] = fminunc(fun,theta0,options);
+            if fval2 < fval
+                theta = theta2;
+            end
     end
     
     
@@ -140,7 +140,7 @@ function train_eval(r_value, dataSet, model, costFunction)
         dataStr = strcat(dataSet,'_r=',num2str(r_value));
     end
     path = strcat('results/', model,'_', dataStr, '_', costFunction);
-    
+
     mkdir(path);
     plotParity(YTrain,YPred,strcat(path,'/parity'));
     [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1,strcat(path,'/REC'));
