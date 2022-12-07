@@ -107,6 +107,7 @@ function train_eval(r_value, dataSet, model, costFunction)
             theta0 = initializeTheta(model,d);
     
             % Optimize function. There are two difference search algorithms we can use. Take better of two
+            rng(1)
             [theta,fval] = fminsearch(fun,theta0,options);
             [theta2,fval2] = fminunc(fun,theta0,options);
             if fval2 < fval
