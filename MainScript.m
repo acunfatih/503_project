@@ -3,6 +3,8 @@ clear all
 close all
 clc
 
+
+
 %% Configurations
 
 % name of the dataset
@@ -28,12 +30,13 @@ model = 'LinearRegression';
 % 7. RR (Ridge Regression)
 % 8. KRR (Kernel Ridge Regression: Very Slow)
 % 9. PLOSS (Probabilistic Loss)
-costFunction = 'PLOSS';
+% 10. SERA (SERA)
+costFunction = 'BMSE';
 
 
 % hyperparameters for cost functions. These are variables that will not be
 % optimized by the optimizer, but may be necessary to change.
-hyp.w = .5; %Used by CWE
+hyp.w = .9; %Used by CWE
 hyp.thresh = 90; %Percentile; Used by CWE,GME
 hyp.sigma = .1; %Used by BMSE
 hyp.lambda = 5e-3; %Used by RR and KRR
@@ -94,6 +97,7 @@ switch costFunction
         theta0 = initializeTheta(model,d);
 
         % Optimize function. There are two difference search algorithms we can use. Take better of two
+        rng(1)
         [theta,fval] = fminsearch(fun,theta0,options);
         [theta2,fval2] = fminunc(fun,theta0,options);
         if fval2 < fval
