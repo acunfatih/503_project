@@ -9,13 +9,12 @@ costFunctions = ["MSE"
     "GME" 
     "CWE" 
     "BMSE" 
-    "MAPE" 
     "RR" 
     "KRR" 
     "PLOSS"];
 
 r_values = [1:0.1:1.7]';
-dataSets = ["synthetic" 
+dataSets = ["synthetic"
     "cali"];
 
 
