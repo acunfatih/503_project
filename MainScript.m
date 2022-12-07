@@ -11,7 +11,7 @@ r_value = 1.7; %we need this value for calling the preprocess_save_Data
 dataSet = 'synthetic';
 
 % preprocess the existing data and save to .mat, takes values 0 or 1
-preprocess = 1; 
+preprocess = 0; 
 
 % Select model and cost function
 % Current Model Options
@@ -95,10 +95,10 @@ switch costFunction
 
         % Optimize function. There are two difference search algorithms we can use. Take better of two
         [theta,fval] = fminsearch(fun,theta0,options);
-%         [theta2,fval2] = fminunc(fun,theta0,options);
-%         if fval2 < fval
-%             theta = theta2;
-%         end
+        [theta2,fval2] = fminunc(fun,theta0,options);
+        if fval2 < fval
+            theta = theta2;
+        end
 end
 
 
