@@ -14,7 +14,7 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
     end
     
     cost = abs(YTrain-YPred);
-    epsilonList = linspace(0,max(YTrain));
+    epsilonList = linspace(0,max(cost)*1.1);
     Accuracy = zeros(1,length(epsilonList));
     for i = 1:length(epsilonList)
         epsilon = epsilonList(i);
@@ -31,7 +31,7 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
     end
     
     if PLOT
-        figure
+        fig = figure;
         plot(epsilonList,AccuracyTPR)
         hold on
         plot(epsilonList,AccuracyTNR)
@@ -41,5 +41,6 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
         xlabel('tolerance \epsilon')
         ylabel('Accurancy')
         savefig(path);
+        saveas(fig,[path,'.png'])
     end
 end
