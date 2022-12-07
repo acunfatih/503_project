@@ -50,7 +50,7 @@ function cost = calculateCost(costFunction,YPred,YTrain,hyp)
             cost = mean((YTrain-YPred).^2 + ((YTrain - YPred).^2+10^-9) .* hyp.phi_y);
         
         case 'SERA'
-            cost = seraCost(YPred,Ytrain);
+            cost = seraCost(YPred,YTrain);
     end
     
 end
