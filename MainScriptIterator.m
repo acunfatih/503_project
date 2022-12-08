@@ -111,9 +111,9 @@ function train_eval(r_value, dataSet, model, costFunction)
     
     
     if strcmp(costFunction,'KRR')
-        YPred = predictYKernel(XTrain,YTrain,XTrain,K_fun,invK,K);
-        YPred_val = predictYKernel(XVal,YVal,XVal,K_fun,invK,K);
-        YPred_test = predictYKernel(XTest,YTest,XTest,K_fun,invK,K);
+        YPred = predictYKernel(XTrain,YTrain,XTrain,K_fun,invK,K,hyp);
+        YPred_val = predictYKernel(XTrain,YTrain,XVal,K_fun,invK,K,hyp);
+        YPred_test = predictYKernel(XTrain,YTrain,XTest,K_fun,invK,K,hyp);
     else
         YPred = predictY(model,theta,XTrain);
         YPred_val = predictY(model,theta,XVal);

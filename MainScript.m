@@ -31,7 +31,7 @@ model = 'LinearRegression';
 % 8. KRR (Kernel Ridge Regression: Very Slow)
 % 9. PLOSS (Probabilistic Loss)
 % 10. SERA (SERA)
-costFunction = 'BMSE';
+costFunction = 'KRR';
 
 
 % hyperparameters for cost functions. These are variables that will not be
@@ -107,7 +107,7 @@ end
 
 
 if strcmp(costFunction,'KRR')
-    YPred = predictYKernel(XTrain,YTrain,XTrain,K_fun,invK,K);
+    YPred = predictYKernel(XTrain,YTrain,XTrain,K_fun,invK,K,hyp);
 else
     YPred = predictY(model,theta,XTrain);
 end
