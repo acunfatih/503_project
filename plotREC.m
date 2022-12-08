@@ -31,16 +31,18 @@ function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
     end
     
     if PLOT
+        fig = figure;
+    else
         fig = figure('Visible','off');
-        plot(epsilonList,AccuracyTPR)
-        hold on
-        plot(epsilonList,AccuracyTNR)
-        plot(epsilonList,AccuracyGM)
-        plot(epsilonList,AccuracyCWA)
-        legend('REC_{TPR}','REC_{TNR}','REC_{G-Mean}','REC_{CWA}')
-        xlabel('tolerance \epsilon')
-        ylabel('Accurancy')
-        savefig(path);
-        saveas(fig,strcat(path,'.png'))
     end
+    plot(epsilonList,AccuracyTPR)
+    hold on
+    plot(epsilonList,AccuracyTNR)
+    plot(epsilonList,AccuracyGM)
+    plot(epsilonList,AccuracyCWA)
+    legend('REC_{TPR}','REC_{TNR}','REC_{G-Mean}','REC_{CWA}')
+    xlabel('tolerance \epsilon')
+    ylabel('Accurancy')
+    savefig(path);
+    saveas(fig,strcat(path,'.png'))
 end

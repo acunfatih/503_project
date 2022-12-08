@@ -126,7 +126,7 @@ MAPE = calculateCost('MAPE',YPred,YTrain,hyp)
 
 path = strcat('results/', model,'_', dataSet, '_', costFunction);
 mkdir(path);
-plotParity(YTrain,YPred,strcat(path,'/parity'));
+plotParity(YTrain,YPred,strcat(path,'/parity'),1);
 [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1,strcat(path,'/REC'));
 
 %% 

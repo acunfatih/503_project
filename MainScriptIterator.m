@@ -143,8 +143,8 @@ function train_eval(r_value, dataSet, model, costFunction)
     path = strcat('results/', model,'_', dataStr, '_', costFunction);
 
     mkdir(path);
-    plotParity(YTrain,YPred,strcat(path,'/parity'));
-    [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,1,strcat(path,'/REC'));
+    plotParity(YTrain,YPred,strcat(path,'/parity'),0);
+    [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,0,strcat(path,'/REC'));
     
     %%
     if ~isfile('results/results.csv')

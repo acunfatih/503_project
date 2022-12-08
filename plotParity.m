@@ -1,8 +1,11 @@
 % Plot parity plot
 
-function plotParity(YTrain,YPred, path)
-
-    fig = figure('Visible','off');
+function plotParity(YTrain,YPred, path,PLOT)
+    if PLOT
+        fig = figure;
+    else
+        fig = figure('Visible','off');
+    end
     scatter(YTrain,YPred,'filled','MarkerFaceAlpha',.3,'MarkerEdgeAlpha',.3)
     hold on
     rangeVal = range([YTrain,YPred]);
