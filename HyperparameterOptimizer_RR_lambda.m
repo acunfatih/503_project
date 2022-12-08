@@ -5,7 +5,7 @@ clc
 
 % name of the dataset
 r_value = 1.2; %we need this value for calling the preprocess_save_Data
-dataSet = 'cali';
+% dataSet = 'cali';
 dataSet = 'synthetic';
 
 % preprocess the existing data and save to .mat, takes values 0 or 1
@@ -27,20 +27,18 @@ model = 'LinearRegression';
 % 8. KRR (Kernel Ridge Regression: Very Slow)
 % 9. PLOSS (Probabilistic Loss)
 % 10. SERA (SERA)
-costFunction = 'CWE';
+costFunction = 'RR';
 
 
 % hyperparameters for cost functions. These are variables that will not be
 % optimized by the optimizer, but may be necessary to change.
-hyp.w = .9; %Used by CWE
+hyp.w = .5; %Used by CWE
 hyp.thresh = 90; %Percentile; Used by CWE,GME
 hyp.sigma = .1; %Used by BMSE
 hyp.lambda = 5e-3; %Used by RR and KRR
 hyp.kernel = 'RBF'; % Options: linear or RBF
 hyp.k_sigma = .1; %Must be > 0. Used by KRR-RBF
 hyp.c = 0; % Must be >= 0. Used by KRR-linear
-
-
 
 
 
@@ -61,12 +59,10 @@ YValOrig = YVal;
 YTestOrig = YTest;
 
 
+lambdaList = logspace(-3,3,13);
 
-
-wList = 0:.1:1;
-
-for i = 1:length(wList)
-    hyp.w = wList(i);
+for i = 1:length(lambdaList)
+    hyp.lambda = lambdaList(i);
     
     [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
     trainAndPredict(model,costFunction,hyp,rangeData,minData,XTrain,XVal,XTest,YTrainOrig,YValOrig,YTestOrig);
@@ -76,7 +72,7 @@ for i = 1:length(wList)
     [MSE_test(i), MAE_test(i), GME_test(i), CWE_test(i), BMSE_test(i), MAPE_test(i)] = inference(YPred_test, YTest, hyp);
 
 
-    path = sprintf('hypresults/%s_%.1f_%s_w%.2f',dataSet,r_value,costFunction,hyp.w);
+    path = sprintf('hypresults/%s_%.1f_%s_lambda%.2e',dataSet,r_value,costFunction,hyp.lambda);
     mkdir(path);
     plotParity(YPred_val,YVal,strcat(path,'/parity'),1);
     [epsilonList,Accuracy] = plotREC(YPred_val,YVal,hyp,1,strcat(path,'/REC'));
@@ -84,6 +80,7 @@ for i = 1:length(wList)
 end
 
 %% Comparison Figure
+
 figure
 displaynames = {'MSE','GME','BMSE','MAE'};
 for i = 1:4
@@ -101,14 +98,54 @@ for i = 1:4
             vals = MAE_val;
             colorVal = 'b';
     end
-    plot(wList,vals,colorVal,'DisplayName',displaynames{i})
+    plot(lambdaList,vals,colorVal,'DisplayName',displaynames{i})
     hold on
     [minVal,idx] = min(vals);
-    scatter(wList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
+    scatter(lambdaList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
 end
 legend('Location','Best')
+set(gca, 'XScale', 'log')
 set(gca, 'YScale', 'log')
-xlabel('w')
+xlabel('Lambda')
 ylabel('Error')
 title('Validation Error')
 
+figure
+for i = 1:3
+    switch i
+        case 1
+            vals = MSE_train;
+            colorVal = 'r';
+        case 2
+            vals = GME_train;
+            colorVal = 'g';
+        case 3
+            vals = MAE_train;
+            colorVal = 'b';
+    end
+    
+    plot(lambdaList,vals,colorVal,'DisplayName',displaynames{i})
+    hold on
+    [minVal,idx] = min(vals);
+    scatter(lambdaList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
+end
+legend('Location','Best')
+set(gca, 'XScale', 'log')
+set(gca, 'YScale', 'log')
+xlabel('Lambda')
+ylabel('Error')
+title('Training Error')
+
+%% 
+% 
+% fid = fopen( 'hypresults/results.csv', 'a+' );
+% 
+% 
+% fprintf( fid, '%s,%s,%s,%f,%f,%f,%f,%f,%f,%s\n', model, dataStr, ...
+%     costFunction, MSE, MAE, GME, CWE, BMSE, MAPE, datestr(now,'DD HH:MM:SS'));
+% fclose( fid );
+
+
+%% 
+
+%%

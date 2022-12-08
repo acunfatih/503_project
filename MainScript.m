@@ -8,7 +8,7 @@ clc
 %% Configurations
 
 % name of the dataset
-r_value = 1.7; %we need this value for calling the preprocess_save_Data
+r_value = 1.2; %we need this value for calling the preprocess_save_Data
 % dataSet = 'cali';
 dataSet = 'synthetic';
 
@@ -31,7 +31,7 @@ model = 'LinearRegression';
 % 8. KRR (Kernel Ridge Regression: Very Slow)
 % 9. PLOSS (Probabilistic Loss)
 % 10. SERA (SERA)
-costFunction = 'KRR';
+costFunction = 'MSE';
 
 
 % hyperparameters for cost functions. These are variables that will not be

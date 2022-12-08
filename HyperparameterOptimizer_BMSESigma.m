@@ -4,7 +4,7 @@ close all
 clc
 
 % name of the dataset
-r_value = 1.1; %we need this value for calling the preprocess_save_Data
+r_value = 1.2; %we need this value for calling the preprocess_save_Data
 % dataSet = 'cali';
 dataSet = 'synthetic';
 
@@ -59,7 +59,7 @@ YValOrig = YVal;
 YTestOrig = YTest;
 
 
-sigmaList = logspace(-2,3,11);
+sigmaList = [logspace(-2,-1,10),logspace(-1,3,9)];
 
 for i = 1:length(sigmaList)
     hyp.sigma = sigmaList(i);
@@ -72,7 +72,7 @@ for i = 1:length(sigmaList)
     [MSE_test(i), MAE_test(i), GME_test(i), CWE_test(i), BMSE_test(i), MAPE_test(i)] = inference(YPred_test, YTest, hyp);
 
 
-    path = sprintf('hypresults/%s_%.1f_%s_%.2e',dataSet,r_value,costFunction,hyp.sigma);
+    path = sprintf('hypresults/%s_%.1f_%s_sigma%.2e',dataSet,r_value,costFunction,hyp.sigma);
     mkdir(path);
     plotParity(YPred_val,YVal,strcat(path,'/parity'),1);
     [epsilonList,Accuracy] = plotREC(YPred_val,YVal,hyp,1,strcat(path,'/REC'));
@@ -86,17 +86,17 @@ displaynames = {'MSE','GME','MAE'};
 for i = 1:3
     switch i
         case 1
-            vals = MSE_train;
+            vals = MSE_val;
             colorVal = 'r';
         case 2
-            vals = GME_train;
+            vals = GME_val;
             colorVal = 'g';
         case 3
-            vals = MAE_train;
+            vals = MAE_val;
             colorVal = 'b';
     end
     
-    plot(sigmaList(2:end-1),vals(2:end-1),colorVal,'DisplayName',displaynames{i})
+    plot(sigmaList,vals,colorVal,'DisplayName',displaynames{i})
     hold on
     [minVal,idx] = min(vals);
     scatter(sigmaList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
@@ -122,7 +122,7 @@ for i = 1:3
             colorVal = 'b';
     end
     
-    plot(sigmaList(2:end-1),vals(2:end-1),colorVal,'DisplayName',displaynames{i})
+    plot(sigmaList,vals,colorVal,'DisplayName',displaynames{i})
     hold on
     [minVal,idx] = min(vals);
     scatter(sigmaList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
