@@ -27,7 +27,7 @@ model = 'LinearRegression';
 % 8. KRR (Kernel Ridge Regression: Very Slow)
 % 9. PLOSS (Probabilistic Loss)
 % 10. SERA (SERA)
-costFunction = 'CWE';
+costFunction = 'GME';
 
 
 % hyperparameters for cost functions. These are variables that will not be
@@ -63,10 +63,10 @@ YTestOrig = YTest;
 
 
 
-wList = 0:.1:1;
+threshList = 0:10:100;
 
-for i = 1:length(wList)
-    hyp.w = wList(i);
+for i = 1:length(threshList)
+    hyp.thresh = threshList(i);
     
     [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
     trainAndPredict(model,costFunction,hyp,rangeData,minData,XTrain,XVal,XTest,YTrainOrig,YValOrig,YTestOrig);
@@ -86,7 +86,7 @@ end
 %% Comparison Figure
 figure
 displaynames = {'MSE','GME','BMSE','MAE'};
-for i = 1:4
+for i = [1,3,4]
     switch i
         case 1
             vals = MSE_val;
@@ -101,14 +101,14 @@ for i = 1:4
             vals = MAE_val;
             colorVal = 'b';
     end
-    plot(wList,vals,colorVal,'DisplayName',displaynames{i})
+    plot(threshList,vals,colorVal,'DisplayName',displaynames{i})
     hold on
     [minVal,idx] = min(vals);
-    scatter(wList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
+    scatter(threshList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
 end
 legend('Location','Best')
 set(gca, 'YScale', 'log')
-xlabel('w')
+xlabel('Threshold')
 ylabel('Error')
 title('Validation Error')
 

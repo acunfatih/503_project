@@ -4,7 +4,7 @@ close all
 clc
 
 % name of the dataset
-r_value = 1.7; %we need this value for calling the preprocess_save_Data
+r_value = 1.2; %we need this value for calling the preprocess_save_Data
 % dataSet = 'cali';
 dataSet = 'synthetic';
 
@@ -59,7 +59,7 @@ YValOrig = YVal;
 YTestOrig = YTest;
 
 
-sigmaList = logspace(-2,3,11);
+sigmaList = [logspace(-2,-1,10),logspace(-1,3,9)];
 
 for i = 1:length(sigmaList)
     hyp.sigma = sigmaList(i);
@@ -96,7 +96,7 @@ for i = 1:3
             colorVal = 'b';
     end
     
-    plot(sigmaList(2:end-1),vals(2:end-1),colorVal,'DisplayName',displaynames{i})
+    plot(sigmaList,vals,colorVal,'DisplayName',displaynames{i})
     hold on
     [minVal,idx] = min(vals);
     scatter(sigmaList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
@@ -122,7 +122,7 @@ for i = 1:3
             colorVal = 'b';
     end
     
-    plot(sigmaList(2:end-1),vals(2:end-1),colorVal,'DisplayName',displaynames{i})
+    plot(sigmaList,vals,colorVal,'DisplayName',displaynames{i})
     hold on
     [minVal,idx] = min(vals);
     scatter(sigmaList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
