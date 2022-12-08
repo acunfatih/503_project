@@ -43,9 +43,9 @@ function train_eval(r_value, dataSet, model, costFunction)
     hyp.w = .5; %Used by CWE
     hyp.thresh = 90; %Percentile; Used by CWE,GME
     hyp.sigma = .1; %Used by BMSE
-    hyp.lambda = 5e-3; %Used by RR and KRR
+    hyp.lambda = .01; %Used by RR and KRR
     hyp.kernel = 'RBF'; % Options: linear or RBF
-    hyp.k_sigma = .1; %Must be > 0. Used by KRR-RBF
+    hyp.k_sigma = 1; %Must be > 0. Used by KRR-RBF
     hyp.c = 0; % Must be >= 0. Used by KRR-linear
     
 
