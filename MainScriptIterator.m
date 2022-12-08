@@ -4,11 +4,11 @@ close all
 clc
 
 models = ["LinearRegression"];
-costFunctions = [
-    "KRR"];
-
+costFunctions = ["MSE"
+    "MAE"];
 r_values = [1:0.1:1.7]';
-dataSets = ["synthetic"
+dataSets = [
+    "synthetic"
     "cali"];
 
 
@@ -68,41 +68,45 @@ function train_eval(r_value, dataSet, model, costFunction)
     end
     
     %% Train and Predict
-    [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
-        trainAndPredict(model,costFunction,hyp,rangeData,minData,XTrain,XVal,XTest,YTrain,YVal,YTest);
-    
-    % calculate cost multiple times with different cost functions
-    
-    [MSE, MAE, GME, CWE, BMSE, MAPE] = inference(YPred_train, YTrain, hyp);
-    [MSE_val, MAE_val, GME_val, CWE_val, BMSE_val, MAPE_val] = inference(YPred_val, YVal, hyp);
-    [MSE_test, MAE_test, GME_test, CWE_test, BMSE_test, MAPE_test] = inference(YPred_test, YTest, hyp);
-
     dataStr = dataSet;
-    
     if strcmp(dataSet, "synthetic")
         dataStr = strcat(dataSet,'_r=',num2str(r_value));
     end
     path = strcat('results/', model,'_', dataStr, '_', costFunction);
-
-    mkdir(path);
-    plotParity(YTrain,YPred_train,strcat(path,'/parity'),0);
-    [epsilonList,Accuracy] = plotREC(YTrain,YPred_train,hyp,0,strcat(path,'/REC'));
     
-    %%
-    if ~isfile('results/results.csv')
-        fid = fopen( 'results/results.csv', 'w' );
-        fprintf(fid, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", 'model', 'dataStr', ...
-        'costFunction', 'MSE', 'MAE', 'GME', 'CWE', 'BMSE', 'MAPE', ...
-        'MSE_val', 'MAE_val', 'GME_val', 'CWE_val', 'BMSE_val', ...
-        'MAPE_val', 'MSE_test', 'MAE_test', 'GME_test', 'CWE_test', 'BMSE_test', 'MAPE_test', 'date');
+    if exist(path, 'dir')
+        load(strcat(path,'/preds.mat'), 'YPred_train','YTrain','YPred_val','YVal','YPred_test','YTest')
     else
-        fid = fopen( 'results/results.csv', 'a+' );
+        [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
+            trainAndPredict(model,costFunction,hyp,rangeData,minData,XTrain,XVal,XTest,YTrain,YVal,YTest);
+        
+        % calculate cost multiple times with different cost functions
+        
+        [MSE, MAE, GME, CWE, BMSE, MAPE] = inference(YPred_train, YTrain, hyp);
+        [MSE_val, MAE_val, GME_val, CWE_val, BMSE_val, MAPE_val] = inference(YPred_val, YVal, hyp);
+        [MSE_test, MAE_test, GME_test, CWE_test, BMSE_test, MAPE_test] = inference(YPred_test, YTest, hyp);
+    
+        
+        mkdir(path);
+        plotParity(YTrain,YPred_train,strcat(path,'/parity'),0);
+        [epsilonList,Accuracy] = plotREC(YTrain,YPred_train,hyp,0,strcat(path,'/REC'));
+        save(convertStringsToChars(strcat(path,'/preds')), 'YPred_train','YTrain','YPred_val','YVal','YPred_test','YTest');
+    
+        if ~isfile('results/results.csv')
+            fid = fopen( 'results/results.csv', 'w' );
+            fprintf(fid, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", 'model', 'dataStr', ...
+            'costFunction', 'MSE', 'MAE', 'GME', 'CWE', 'BMSE', 'MAPE', ...
+            'MSE_val', 'MAE_val', 'GME_val', 'CWE_val', 'BMSE_val', ...
+            'MAPE_val', 'MSE_test', 'MAE_test', 'GME_test', 'CWE_test', 'BMSE_test', 'MAPE_test', 'date');
+        else
+            fid = fopen( 'results/results.csv', 'a+' );
+        end
+        fprintf( fid, '%s,%s,%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n', model, dataStr, ...
+            costFunction, MSE, MAE, GME, CWE, BMSE, MAPE, ...
+            MSE_val, MAE_val, GME_val, CWE_val, BMSE_val, ...
+            MAPE_val, MSE_test, MAE_test, GME_test, CWE_test, BMSE_test, MAPE_test, datestr(now,'DD HH:MM:SS'));
+        fclose( fid );
     end
-    fprintf( fid, '%s,%s,%s,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%s\n', model, dataStr, ...
-        costFunction, MSE, MAE, GME, CWE, BMSE, MAPE, ...
-        MSE_val, MAE_val, GME_val, CWE_val, BMSE_val, ...
-        MAPE_val, MSE_test, MAE_test, GME_test, CWE_test, BMSE_test, MAPE_test, datestr(now,'DD HH:MM:SS'));
-    fclose( fid );
 end
 
 
