@@ -5,7 +5,7 @@ clc
 
 models = ["LinearRegression"];
 costFunctions = [
-    "PLOSS"];
+    "KRR"];
 
 r_values = [1:0.1:1.7]';
 dataSets = ["synthetic"
@@ -48,19 +48,7 @@ function train_eval(r_value, dataSet, model, costFunction)
     hyp.k_sigma = .1; %Must be > 0. Used by KRR-RBF
     hyp.c = 0; % Must be >= 0. Used by KRR-linear
     
-    
-    
-    % Optimize theta (Note, if the model and cost function you are using has a
-    % closed form solution, you can use that. But this seems rare since we are
-    % mixing and matching models and cost functions).
-    options = optimset('Display',...
-                        'iter',...
-                        'PlotFcns',@optimplotfval,...
-                        'MaxFunEvals',1E5,...
-                        'MaxIter',1E5,...
-                        'TolX',1e-4,...
-                        'TolFun',1e-4);
-    
+
     %% preprocess 
     if preprocess
         preprocess_save_data(dataSet,r_value);
@@ -71,67 +59,21 @@ function train_eval(r_value, dataSet, model, costFunction)
     else
         path = strcat('data/', dataSet, '.mat');
     end
-    load(path);
+    load(path,'minData','rangeData','XTest','XTrain','XVal','YTest','YTrain','YVal');
+
     
     %%
     if strcmp(costFunction, 'PLOSS')
         hyp.phi_y = fitProbabilisticLoss(YTrain, 0);
     end
     
-    %% One example using Linear regression and MSE
+    %% Train and Predict
+    [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
+        trainAndPredict(model,costFunction,hyp,rangeData,minData,XTrain,XVal,XTest,YTrain,YVal,YTest);
     
-    switch costFunction
-        case 'RR'
-            theta = ridge(YTrain',XTrain',hyp.lambda,0);
-            theta = [theta(2:end);theta(1)];
-            
-        case 'KRR'
-            [K_fun,invK,K] = KRR(XTrain,hyp);
-    
-        otherwise
-    
-            % Define optimizer function that will be used to find optimized
-            % theta. The variables passed are freezed as passed, so you must
-            % rerun this if you update the variables.
-            fun = @(theta)optimizedFunction(theta,model,costFunction,XTrain,YTrain,hyp);
-    
-            % Initialize theta0 randomly. theta0 must have the correct size for the model that
-            % you are using.
-            d = size(XTrain,1);
-            theta0 = initializeTheta(model,d);
-    
-            % Optimize function. There are two difference search algorithms we can use. Take better of two
-            rng(1)
-            [theta,fval] = fminsearch(fun,theta0,options);
-            [theta2,fval2] = fminunc(fun,theta0,options);
-            if fval2 < fval
-                theta = theta2;
-            end
-    end
-    
-    
-    if strcmp(costFunction,'KRR')
-        YPred = predictYKernel(XTrain,YTrain,XTrain,K_fun,invK,K,hyp);
-        YPred_val = predictYKernel(XTrain,YTrain,XVal,K_fun,invK,K,hyp);
-        YPred_test = predictYKernel(XTrain,YTrain,XTest,K_fun,invK,K,hyp);
-    else
-        YPred = predictY(model,theta,XTrain);
-        YPred_val = predictY(model,theta,XVal);
-        YPred_test = predictY(model,theta,XTest);
-    end
-    
-    % Denormalize the predictions
-    YPred = YPred * rangeData(end) + minData(end);
-    YTrain = YTrain * rangeData(end) + minData(end);
-    
-    YPred_val = YPred_val * rangeData(end) + minData(end);
-    YVal = YVal * rangeData(end) + minData(end);
-    
-    YPred_test = YPred_test * rangeData(end) + minData(end);
-    YTest = YTest * rangeData(end) + minData(end);
     % calculate cost multiple times with different cost functions
     
-    [MSE, MAE, GME, CWE, BMSE, MAPE] = inference(YPred, YTrain, hyp);
+    [MSE, MAE, GME, CWE, BMSE, MAPE] = inference(YPred_train, YTrain, hyp);
     [MSE_val, MAE_val, GME_val, CWE_val, BMSE_val, MAPE_val] = inference(YPred_val, YVal, hyp);
     [MSE_test, MAE_test, GME_test, CWE_test, BMSE_test, MAPE_test] = inference(YPred_test, YTest, hyp);
 
@@ -143,8 +85,8 @@ function train_eval(r_value, dataSet, model, costFunction)
     path = strcat('results/', model,'_', dataStr, '_', costFunction);
 
     mkdir(path);
-    plotParity(YTrain,YPred,strcat(path,'/parity'),0);
-    [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,0,strcat(path,'/REC'));
+    plotParity(YTrain,YPred_train,strcat(path,'/parity'),0);
+    [epsilonList,Accuracy] = plotREC(YTrain,YPred_train,hyp,0,strcat(path,'/REC'));
     
     %%
     if ~isfile('results/results.csv')
