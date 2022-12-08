@@ -42,16 +42,7 @@ hyp.c = 0; % Must be >= 0. Used by KRR-linear
 
 
 
-% Optimize theta (Note, if the model and cost function you are using has a
-% closed form solution, you can use that. But this seems rare since we are
-% mixing and matching models and cost functions).
-options = optimset('Display',...
-                    'iter',...
-                    'PlotFcns',@optimplotfval,...
-                    'MaxFunEvals',1E3,...
-                    'MaxIter',1E3,...
-                    'TolX',1e-4,...
-                    'TolFun',1e-4);
+
 
 
 %% preprocess 
@@ -64,7 +55,11 @@ if strcmp(dataSet,'synthetic')
 else
     path = strcat('data/', dataSet, '.mat');
 end
-load(path);
+load(path,'minData','rangeData','XTest','XTrain','XVal','YTest','YTrain','YVal');
+YTrainOrig = YTrain;
+YValOrig = YVal;
+YTestOrig = YTest;
+
 
 
 
@@ -73,24 +68,18 @@ wList = 0:.1:1;
 for i = 1:length(wList)
     hyp.w = wList(i);
     
-    YPred = TrainAndPredict(XTrain,YTrain,options,hyp,model,costFunction);
+    [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
+    trainAndPredict(model,costFunction,hyp,rangeData,minData,XTrain,XVal,XTest,YTrainOrig,YValOrig,YTestOrig);
 
-    % Denormalize the predictions
-    YPred2 = YPred * rangeData(end) + minData(end);
-    YTrain2 = YTrain * rangeData(end) + minData(end);
-    % calculate cost multiple times with different cost functions
-    MSE(i) = calculateCost('MSE',YPred2,YTrain2,hyp);
-    MAE(i) = calculateCost('MAE',YPred2,YTrain2,hyp);
-    GME(i) = calculateCost('GME',YPred2,YTrain2,hyp);
-    CWE(i) = calculateCost('CWE',YPred2,YTrain2,hyp);
-    BMSE(i) = calculateCost('BMSE',YPred2,YTrain2,hyp);
-    MAPE(i) = calculateCost('MAPE',YPred2,YTrain2,hyp);
+    [MSE_train(i), MAE_train(i), GME_train(i), CWE_train(i), BMSE_train(i), MAPE_train(i)] = inference(YPred_train, YTrain, hyp);
+    [MSE_val(i), MAE_val(i), GME_val(i), CWE_val(i), BMSE_val(i), MAPE_val(i)] = inference(YPred_val, YVal, hyp);
+    [MSE_test(i), MAE_test(i), GME_test(i), CWE_test(i), BMSE_test(i), MAPE_test(i)] = inference(YPred_test, YTest, hyp);
 
 
     path = sprintf('hypresults/%s_%.1f_%s_w%.2f',dataSet,r_value,costFunction,hyp.w);
     mkdir(path);
-    plotParity(YTrain2,YPred2,strcat(path,'/parity'));
-%     [epsilonList,Accuracy] = plotREC(YTrain2,YPred,hyp,1,strcat(path,'/REC'));
+    plotParity(YPred_val,YVal,strcat(path,'/parity'),1);
+    [epsilonList,Accuracy] = plotREC(YPred_val,YVal,hyp,1,strcat(path,'/REC'));
 
 end
 
@@ -100,21 +89,24 @@ displaynames = {'MSE','GME','BMSE','MAE'};
 for i = 1:4
     switch i
         case 1
-            vals = MSE;
+            vals = MSE_train;
+            colorVal = 'r';
         case 2
-            vals = GME;
+            vals = GME_train;
+            colorVal = 'g';
         case 3
-            vals = BMSE;
+            vals = BMSE_val;
+            colorVal = 'c';
         case 4
-            vals = MAE;
+            vals = MAE_train;
+            colorVal = 'b';
     end
-    
-    plot(wList,vals,'DisplayName',displaynames{i})
+    plot(wList,vals,colorVal,'DisplayName',displaynames{i})
     hold on
     [minVal,idx] = min(vals);
-    scatter(wList(idx),minVal,'Filled','DisplayName','Min of Function')
+    scatter(wList(idx),minVal,colorVal,'Filled','DisplayName','Min of Function')
 end
-legend
+legend('Location','Best')
 set(gca, 'YScale', 'log')
 xlabel('w')
 ylabel('Error')
