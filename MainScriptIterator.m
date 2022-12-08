@@ -4,8 +4,17 @@ close all
 clc
 
 models = ["LinearRegression"];
-costFunctions = ["MSE"
-    "MAE"];
+costFunctions = [
+    "MSE"
+    "MAE"
+    "GME"
+    "CWE"
+    "BMSE"
+    "RR"
+    "PLOSS"
+    "SERA"
+    "KRR"
+    ];
 r_values = [1:0.1:1.7]';
 dataSets = [
     "synthetic"
@@ -13,9 +22,9 @@ dataSets = [
 
 
 %%
-for m = 1:size(models,1)
+for d = 1:size(dataSets,1)
     for c = 1:size(costFunctions,1)
-        for d = 1:size(dataSets,1)
+        for m = 1:size(models,1)
             if strcmp(dataSets(d), "synthetic")
                 for r = 1:size(r_values,1)
                     fprintf("Training model: %s, costFunction: %s, data: %s, r_value: %f \n", models(m), costFunctions(c), dataSets(d), r_values(r));
@@ -23,7 +32,7 @@ for m = 1:size(models,1)
                 end
             else
                 fprintf("Training model: %s, costFunction: %s, data: %s \n", models(m), costFunctions(c), dataSets(d));
-%                 train_eval(r_value, dataSet, model, costFunction);
+                train_eval(0, dataSets(d), models(m), costFunctions(c));
             end
             
         end
@@ -73,10 +82,9 @@ function train_eval(r_value, dataSet, model, costFunction)
         dataStr = strcat(dataSet,'_r=',num2str(r_value));
     end
     path = strcat('results/', model,'_', dataStr, '_', costFunction);
-    
-    if exist(path, 'dir')
-        load(strcat(path,'/preds.mat'), 'YPred_train','YTrain','YPred_val','YVal','YPred_test','YTest')
-    else
+    path_preds = strcat(path,'/preds.mat');
+
+    if ~exist(path_preds, 'file')
         [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
             trainAndPredict(model,costFunction,hyp,rangeData,minData,XTrain,XVal,XTest,YTrain,YVal,YTest);
         
@@ -89,8 +97,8 @@ function train_eval(r_value, dataSet, model, costFunction)
         
         mkdir(path);
         plotParity(YTrain,YPred_train,strcat(path,'/parity'),0);
-        [epsilonList,Accuracy] = plotREC(YTrain,YPred_train,hyp,0,strcat(path,'/REC'));
-        save(convertStringsToChars(strcat(path,'/preds')), 'YPred_train','YTrain','YPred_val','YVal','YPred_test','YTest');
+        [~,~] = plotREC(YTrain,YPred_train,hyp,0,strcat(path,'/REC'));
+        save(path_preds, 'YPred_train','YTrain','YPred_val','YVal','YPred_test','YTest');
     
         if ~isfile('results/results.csv')
             fid = fopen( 'results/results.csv', 'w' );
