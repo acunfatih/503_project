@@ -4,13 +4,7 @@ close all
 clc
 
 models = ["LinearRegression"];
-costFunctions = ["MSE" 
-    "MAE" 
-    "GME" 
-    "CWE" 
-    "BMSE" 
-    "RR" 
-    "KRR" 
+costFunctions = [
     "PLOSS"];
 
 r_values = [1:0.1:1.7]';
