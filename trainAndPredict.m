@@ -36,10 +36,13 @@ function [YPred_train,YTrain,YPred_val,YVal,YPred_test,YTest] = ...
             % Optimize function. There are two difference search algorithms we can use. Take better of two
             rng(1)
             [theta,fval] = fminsearch(fun,theta0,options);
-            [theta2,fval2] = fminunc(fun,theta0,options);
-            if fval2 < fval
-                theta = theta2;
+            try
+                [theta2,fval2] = fminunc(fun,theta0,options);
+                if fval2 < fval
+                    theta = theta2;
+                end
             end
+            
     end
     
     
