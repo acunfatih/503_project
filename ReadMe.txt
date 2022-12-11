@@ -16,3 +16,10 @@ The current system uses both and then selects the theta with the lowest cost. Th
 
 --How to add a cost function
 1. Add cost function to calculateCost.m
+
+--How to generate a synthetic dataset
+1. Open synthetic_data_2D.m
+2. Go to line 19: r = 1.7
+3. Change the value of r to get a different imbalance level
+Note: when r = 1.0 uniformly balanced 2D synthetic data will be generated
+
