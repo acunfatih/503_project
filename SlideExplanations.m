@@ -6,7 +6,7 @@ clc
 
 % Load synthetic dataset
 
-r_value = 1.7; 
+r_value = 1.4; 
 dataSet = 'synthetic';
 
 if strcmp(dataSet,'synthetic')
@@ -72,6 +72,37 @@ xticks([])
 set(gcf,'color','white')
 title('Normalized Synthetic Dataset: r=1.7')
 legend('Class P','Class N','90% Threshold')
+
+
+
+%% Try two at describing Psuedo Class
+
+%Create scatter plot that can take a threshold
+
+figure
+histogram(YTrain)
+xlabel('Label')
+ylabel('Number of Points')
+set(gcf,'color','white')
+title('Normalized Synthetic Dataset: r=1.4')
+
+% CDF
+t_E = prctile(YTrain,90);
+
+figure
+cdfplot(YTrain)
+ylabel('Fraction of Data Below Threshold')
+xlabel('Threshold')
+set(gcf,'color','white')
+title('Normalized Synthetic Dataset: r=1.4')
+set(gcf,'color','white')
+hold on
+yline(.9,'r--')
+ylabel('Label')
+set(gcf,'color','white')
+title('Normalized Synthetic Dataset: r=1.4')
+legend('CDF','90% Threshold')
+
 
 
 %% CWE Sweeps
