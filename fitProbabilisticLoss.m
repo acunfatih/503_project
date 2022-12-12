@@ -1,3 +1,5 @@
+% Calculates the relevance function of Probabilistic Loss
+
 function phi_y = fitProbabilisticLoss(YTrain ,print_graph)
     [f,xi] = ksdensity(YTrain);
     [fnorm,fmin,frange] = norm_zero2one(f);

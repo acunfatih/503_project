@@ -1,3 +1,5 @@
+% loads the data from csv, preprocesses and saves as .mat under 'data' folder
+
 function [XTrain, YTrain, XVal, YVal, XTest, YTest,minData,rangeData] = preprocess_save_data(name,r)
     switch name
         case 'cali'

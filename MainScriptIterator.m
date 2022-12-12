@@ -1,9 +1,32 @@
-%% This is the main script
+% This is the main script iterating over all the models, costfunctions and the datasets.
+% The results(plots, predictions) are saved to the related directories under results folder.
+% results/results.csv file is to store the evaluation results for each run.
+% If you want to do a single run, pick one model, costFunction and dataset
+% by commenting out the others.
+
 clear all
 close all
 clc
 
+% Select model and cost function,
+% Current Model Options
+% 1. LinearRegression
+% 2. RR (Ridge Regression)
+% 3. KRR (Kernel Ridge Regression)
+
 models = ["LinearRegression"];
+
+% Current CostFunction Options
+% 1. MSE (Mean Square Error)
+% 2. MAE (Mean Absolute Error)
+% 3. GME (Geometric Mean Error)
+% 4. CWE (Class Weighted Error)
+% 5. BMSE (Balanced MSE)
+% 6. RR (Ridge Regression)
+% 7. KRR (Kernel Ridge Regression: Very Slow)
+% 8. PLOSS (Probabilistic Loss)
+% 9. SERA (SERA)
+
 costFunctions = [
     "MSE"
     "MAE"
@@ -15,7 +38,10 @@ costFunctions = [
     "SERA"
     "KRR"
     ];
+
+
 r_values = [1:0.1:1.7]';
+
 dataSets = [
     "synthetic"
     "cali"];
