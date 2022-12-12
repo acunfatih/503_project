@@ -1,4 +1,4 @@
-% Rec Curves
+% Plots Rec Curves
 
 function [epsilonList,Accuracy] = plotREC(YTrain,YPred,hyp,PLOT,path)
     w = hyp.w;

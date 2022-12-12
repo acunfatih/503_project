@@ -1,4 +1,4 @@
-%% This is the main script
+%% This is the main script that can be used to test single models during development
 clear all
 close all
 clc

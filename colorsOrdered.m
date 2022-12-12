@@ -1,7 +1,9 @@
 %colorsOrdered
+% This function is used to get an ordered list of colorblind compliant
+% colors. This can be useful when plotting several things as once. The
+% color values were taken from: https://sashamaps.net/docs/resources/20-colors/
 
-%Taken from: https://sashamaps.net/docs/resources/20-colors/
-function [value,color,colorList] = ColorsOrdered(index)
+function [value,color,colorList] = colorsOrdered(index)
     index = floor(index);
     if index > 21
         index = mod(index-1,21)+1;

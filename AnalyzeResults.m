@@ -1,4 +1,9 @@
 % Analyze Results
+% Function that looks at raw results.
+
+
+
+
 clear all
 close all
 clc

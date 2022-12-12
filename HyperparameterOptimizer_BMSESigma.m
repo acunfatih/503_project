@@ -1,4 +1,6 @@
-%% This is the main script
+%% This is used to fit hyperparameters for sigma from BMSE cost function.
+
+
 clear all
 close all
 clc

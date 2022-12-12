@@ -1,4 +1,4 @@
-%% This function is used in fminsearch to optimize theta
+%% This function is used in fminsearch and fminunc to optimize theta
 
 
 function cost = optimizedFunction(theta,model,costFunction,XTrain,YTrain,hyp)

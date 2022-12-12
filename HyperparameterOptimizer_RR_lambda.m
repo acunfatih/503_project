@@ -1,4 +1,4 @@
-%% This is the main script
+%% This is used to fit hyperparameters for lambda from RR cost function.
 clear all
 close all
 clc

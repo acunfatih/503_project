@@ -1,4 +1,6 @@
 % Calculate Cost based on cost function
+% This function takes a cost function, yPred, YTrain, and hyperparameters
+% and calculates the associated loss.
 
 function cost = calculateCost(costFunction,YPred,YTrain,hyp)
 

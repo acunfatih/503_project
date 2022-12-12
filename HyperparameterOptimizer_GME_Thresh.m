@@ -1,4 +1,4 @@
-%% This is the main script
+%% This is used to fit hyperparameters for threshold from GME cost function.
 clear all
 close all
 clc

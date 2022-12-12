@@ -1,4 +1,4 @@
-%% This is the main script
+%% This was used to prepare data for the progress report. It is saved for posterity.
 clear all
 close all
 clc

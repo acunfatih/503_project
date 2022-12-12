@@ -1,4 +1,4 @@
-% Plot parity plot
+% Plot parity plot of data.
 
 function plotParity(YTrain,YPred, path,PLOT)
     if PLOT

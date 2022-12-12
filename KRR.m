@@ -1,4 +1,6 @@
 % Kernel Ridge Regression
+% This function creates the kernel function, inverse of K, and K for use in
+% Kernel Ridge Regression.
 
 function [K_fun,invK,K] = KRR(XTrain,hyp)
     

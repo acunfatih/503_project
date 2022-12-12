@@ -1,4 +1,7 @@
 % Slide Explanations
+% Script used to prepare many of the plots and figures used in both the
+% presentation and the final report.
+
 clear all
 close all
 clc
